@@ -6,15 +6,16 @@
 
 using namespace std;
 
-RenderWindow::RenderWindow(const char* p_title, int p_w, int p_h)
+RenderWindow::RenderWindow(const char* p_title)//, int p_w, int p_h)
 	:window(NULL), renderer(NULL)
 {
-	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, p_w, p_h, SDL_WINDOW_FULLSCREEN);// && SDL_WINDOW_BORDERLESS
+	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN); // && SDL_WINDOW_BORDERLESS
 
 	if (window == NULL)
 		cout << "Window failed to init: " << SDL_GetError() << endl;
 
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	SDL_RenderSetLogicalSize(renderer, 1920, 1080);
 }
 
 SDL_Texture* RenderWindow::loadTexture(const char* filePath)

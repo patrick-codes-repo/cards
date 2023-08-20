@@ -55,11 +55,11 @@ int main()
 
 int mainMenu()
 {
-	RenderWindow window("Main Menu", SCREEN_WIDTH, SCREEN_HEIGHT);
+	RenderWindow window("Main Menu");
 	SDL_Renderer* renderer = window.getRenderer();
 
 	Mouse mouse(renderer);
-	
+
 	Button play_button(renderer, 50, 115, SCREEN_WIDTH/2 - 100, 500);
 	Button exit_button(renderer, 50, 115, SCREEN_WIDTH/2 - 100, 600);
 
@@ -119,7 +119,7 @@ int mainMenu()
 
 int playGame()
 {
-	RenderWindow window ("Playing Game", SCREEN_WIDTH, SCREEN_HEIGHT);
+	RenderWindow window ("Playing Game");//, SCREEN_WIDTH, SCREEN_HEIGHT);
 	SDL_Renderer* renderer = window.getRenderer();
 
 	Mouse mouse (renderer);

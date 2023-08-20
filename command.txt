@@ -1,1 +1,0 @@
-g++ gui.cpp render_window.cpp entity.cpp mouse.cpp button.cpp card.cpp dummy_card.cpp opponent.cpp opponent_card.cpp -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
