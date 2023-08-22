@@ -14,7 +14,6 @@ Mouse::Mouse(SDL_Renderer* p_renderer)
 
 	SDL_ShowCursor(SDL_DISABLE);
 	SDL_WarpMouseInWindow(NULL, SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
-	update();
 }
 
 void Mouse::update()

@@ -99,6 +99,7 @@ void DummyCard::resetCardPosition()
 
 void DummyCard::setIsVisible()
 {
+	cout << "called setvisible at index " << ARRAY_POSITION << endl;
 	isVisible = true;
 }
 
