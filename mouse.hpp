@@ -9,7 +9,9 @@ class Mouse {
 		Mouse(SDL_Renderer* p_renderer);
 		void update();
 		void draw(SDL_Renderer* p_renderer);
-		SDL_Rect collision_rect;
+		int getCollisionRectX();
+		int getCollisionRectY();
+		SDL_Rect collisionRect;
 
 	private:
 		SDL_Texture* mouse_texture;

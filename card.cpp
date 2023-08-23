@@ -48,7 +48,6 @@ Card::Card(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, shor
 	SDL_FreeSurface(cardDescriptionSurface);
 	SDL_DestroyTexture(cardDescriptionTexture);
 
-
 	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
 		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
 
@@ -63,7 +62,6 @@ Card::Card(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, shor
 	healthTextDest.w = healthSurface->w;
 	healthTextDest.h = healthSurface->h;
 	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest);
-	/* TTF_CloseFont(cardStatsFont); */
 	SDL_FreeSurface(healthSurface);
 	SDL_DestroyTexture(healthTexture);
 	
@@ -87,7 +85,7 @@ Card::Card(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, shor
 
 void Card::update(Mouse p_mouse)
 {
-	isSelected = SDL_HasIntersection(&targetDest, &p_mouse.collision_rect);
+	isSelected = SDL_HasIntersection(&targetDest, &p_mouse.collisionRect);
 
 	if(cardState == onSide)
 	{
@@ -98,7 +96,7 @@ void Card::update(Mouse p_mouse)
 
 	if(cardState == onBoard)
 	{
-		//dsplay card info
+		//display card info
 		return;
 	}
 
@@ -116,8 +114,8 @@ void Card::moveCard(Mouse p_mouse)
 	if(cardState == onBoard)
 		return;
 
-	targetDest.x = p_mouse.collision_rect.x - targetDest.w/2;
-	targetDest.y = p_mouse.collision_rect.y - targetDest.h/2;
+	targetDest.x = p_mouse.getCollisionRectX() - targetDest.w/2;
+	targetDest.y = p_mouse.getCollisionRectY() - targetDest.h/2;
 }
 
 void Card::render(SDL_Renderer* p_renderer)

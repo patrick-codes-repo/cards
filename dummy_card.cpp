@@ -72,7 +72,7 @@ DummyCard::DummyCard(SDL_Renderer* p_renderer, short p_arrayPosition)
 
 void DummyCard::update(Mouse p_mouse)
 {
-	if(SDL_HasIntersection(&targetDest, &p_mouse.collision_rect))
+	if(SDL_HasIntersection(&targetDest, &p_mouse.collisionRect))
 	{
 		isSelected = true;
 		targetDest.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT; 

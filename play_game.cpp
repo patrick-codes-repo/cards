@@ -77,10 +77,9 @@ int playGame()
 
 		if (!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON_LMASK))
 			selectedIndex = -1;
-		else
-		{
+
+		if(selectedIndex > -1)
 			deck[handDisplayController][selectedIndex].moveCard(mouse);
-		}
 
 		for(Card& c : cardsOnBoard)
 		{
@@ -159,11 +158,12 @@ int playGame()
 
 						}
 
-						checkIfCardPlayed(deck[handDisplayController], cardsOnBoard, handFillers[handDisplayController]);
+						if (selectedIndex > -1)
+							checkIfCardPlayed(deck[handDisplayController], cardsOnBoard, handFillers[handDisplayController]);
 					}
 					break;
 				case SDL_MOUSEWHEEL:
-					if(mouse.collision_rect.y < 700 || mouse.collision_rect.x > 1400 || mouse.collision_rect.x < 520)
+					if(mouse.getCollisionRectY() < 700 || mouse.getCollisionRectX() > 1400 || mouse.getCollisionRectX() < 520)
 						break;
 					if(event.wheel.y > 0 && !cardOnside)
 					{
@@ -208,16 +208,6 @@ int playGame()
 		mouse.draw(renderer);
 
 		window.display();
-
-		for( int j = 0; j<3; j++)
-		{
-		for (int i = 0; i < 4; i++)
-		{
-			cout << "handFillers at " << j << ", " << i << " visible " << handFillers[j][i].getIsVisible() << endl;
-			if (handFillers[j][i].getIsVisible() >1)
-			exit(1);
-		}
-		}
 	}
 }
 

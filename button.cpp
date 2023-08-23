@@ -17,7 +17,7 @@ Button::Button(SDL_Renderer* p_renderer, int p_sourceX, int p_sourceY, int p_des
 
 void Button::update(Mouse p_mouse)
 {
-	if(SDL_HasIntersection(&destination, &p_mouse.collision_rect))
+	if(SDL_HasIntersection(&destination, &p_mouse.collisionRect))
 	{
 		is_selected = true;
 		source.y = 190;
