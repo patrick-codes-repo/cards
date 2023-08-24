@@ -1,3 +1,9 @@
+#ifdef _WIN32
+#include <windows.h>
+#else
+#include <unistd.h> 
+#endif
+
 #include <iostream>
 
 #include "opponent.hpp"
@@ -24,17 +30,7 @@ Opponent::Opponent(SDL_Renderer* p_renderer, short p_health)
 	TTF_CloseFont(opponentHealthFont);
 	SDL_FreeSurface(opponentHealthSurface);
 
-	TTF_Font* manaFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
-	sprintf(manaBuffer, "%d", mana);
-	SDL_Surface* manaSurface = TTF_RenderText_Blended_Wrapped(manaFont, manaBuffer, fontColor, 0);
-	manaTexture = SDL_CreateTextureFromSurface(renderer, manaSurface);
-	manaTextDest.x = (2*SCREEN_WIDTH/3) - manaSurface->w/2;
-	manaTextDest.y = SCREEN_HEIGHT/5 - manaSurface->h/2;
-	manaTextDest.w = manaSurface->w;
-	manaTextDest.h = manaSurface->h;
-	SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest);
-	TTF_CloseFont(manaFont);
-	SDL_FreeSurface(manaSurface);
+	drawMana();
 
 	TTF_Quit();
 }
@@ -97,4 +93,30 @@ short Opponent::chooseCard()
 	}
 
 	return -1;
+}
+
+void Opponent::incrementMana()
+{
+	mana++;
+}
+
+void Opponent::drawMana()
+{
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	SDL_Color fontColor = { 255, 255, 255 };
+	TTF_Font* manaFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
+	sprintf(manaBuffer, "%d", mana);
+	SDL_Surface* manaSurface = TTF_RenderText_Blended_Wrapped(manaFont, manaBuffer, fontColor, 0);
+	manaTexture = SDL_CreateTextureFromSurface(renderer, manaSurface);
+	manaTextDest.x = (2*SCREEN_WIDTH/3) - manaSurface->w/2;
+	manaTextDest.y = SCREEN_HEIGHT/5 - manaSurface->h/2;
+	manaTextDest.w = manaSurface->w;
+	manaTextDest.h = manaSurface->h;
+	SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest);
+	TTF_CloseFont(manaFont);
+	SDL_FreeSurface(manaSurface);
+
+	TTF_Quit();
 }

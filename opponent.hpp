@@ -16,6 +16,8 @@ class Opponent {
 		void renderCards();
 		void updateCards(Mouse p_mouse);
 		short getMana();
+		void incrementMana();
+		void drawMana();
 	private:
 		SDL_Renderer* renderer;
 		SDL_Texture* opponentHealthTexture; 

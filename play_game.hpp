@@ -31,6 +31,7 @@ extern SDL_Texture* playerManaTexture;
 extern SDL_Rect roundNumberDest;
 extern SDL_Rect healthTextDest;
 extern SDL_Rect manaTextDest;
+extern Opponent* opponent;
 	
 int playGame();
 void checkIfCardPlayed(Card p_displayedCards[], vector<Card> &p_cardsOnBoard, DummyCard p_dummyCard[]);

@@ -17,6 +17,7 @@ SDL_Texture* playerManaTexture;
 SDL_Rect roundNumberDest;
 SDL_Rect healthTextDest;
 SDL_Rect manaTextDest;
+Opponent* opponent;
 
 int playGame()
 {
@@ -60,7 +61,8 @@ int playGame()
 	short cardOnSideIndex;
 	int selectedIndex;
 
-	Opponent opponent(renderer, 50);
+	/* Opponent* opponent;//;(renderer, 50); */
+	opponent = new Opponent(renderer, 50);
 
 	SDL_Event event;
 
@@ -86,10 +88,16 @@ int playGame()
 			c.update(mouse);
 		}
 
-		opponent.updateCards(mouse);
+		opponent->updateCards(mouse);
 
 		cardOnside = checkIfCardOnSide(deck[handDisplayController], cardOnSideIndex);
-		
+
+		if(!playersTurn)
+		{
+			opponent->playCard();
+			endRound();
+		}	
+
 		while(SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -118,7 +126,7 @@ int playGame()
 						{
 							cout << "test button clicked" << endl;
 							/* test.damaged(renderer, 2); */
-							opponent.playCard();
+							opponent->playCard();
 						}
 
 						if (scrollDeckup.getIsSelected() && !cardOnside)
@@ -188,9 +196,9 @@ int playGame()
 		SDL_RenderCopy(renderer, playerManaTexture, NULL, &manaTextDest);
 		SDL_RenderCopy(renderer, roundNumberTexture, NULL, &roundNumberDest);
 
-		opponent.renderHealth();
-		opponent.renderCards();
-		opponent.renderMana();
+		opponent->renderHealth();
+		opponent->renderCards();
+		opponent->renderMana();
 
 		mainMenuButton.draw(renderer);
 		testFunctionButton.draw(renderer);
@@ -270,7 +278,6 @@ bool checkIfCardOnSide(Card p_displayedCards[], short &p_onsideCardIndex)
 
 void updatePlayerHand(DummyCard p_currentHandFillers[], Card p_currentHandCards[], Mouse p_mouse)
 {
-	
 	(!p_currentHandFillers[0].getIsVisible()) ? p_currentHandCards[0].update(p_mouse) : p_currentHandFillers[0].update(p_mouse);
 	(!p_currentHandFillers[1].getIsVisible()) ? p_currentHandCards[1].update(p_mouse) : p_currentHandFillers[1].update(p_mouse);
 	(!p_currentHandFillers[2].getIsVisible()) ? p_currentHandCards[2].update(p_mouse) : p_currentHandFillers[2].update(p_mouse);
@@ -293,6 +300,12 @@ void endRound()
 	roundNumber++;
 	playersTurn = (roundNumber % 2 != 0);
 	drawRoundNumber();
+	
+	playerMana++;
+	drawPlayerMana();
+
+	opponent->incrementMana();
+	opponent->drawMana();
 }
 
 void drawRoundNumber()
