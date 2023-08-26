@@ -94,11 +94,10 @@ void Card::update(Mouse p_mouse)
 		return;
 	}
 
-	if(cardState == onBoard)
-	{
-		//display card info
-		return;
-	}
+	/* if(cardState == onBoard) */
+	/* { */
+	/* 	//display card info */
+	/* } */
 
 	if(isSelected && (cardState == inHand))
 	{
@@ -111,9 +110,6 @@ void Card::update(Mouse p_mouse)
 
 void Card::moveCard(Mouse p_mouse)
 {
-	if(cardState == onBoard)
-		return;
-
 	targetDest.x = p_mouse.getCollisionRectX() - targetDest.w/2;
 	targetDest.y = p_mouse.getCollisionRectY() - targetDest.h/2;
 }
@@ -168,6 +164,13 @@ int Card::getCardY()
 
 void Card::resetCardPosition()
 {
+	if(cardState == onBoard)
+	{
+		targetDest.y = SCREEN_HEIGHT/2;
+		targetDest.x = SCREEN_WIDTH/8 + cardPosition * SCREEN_WIDTH/8;
+		return;
+	}
+
 	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * ARRAY_POSITION);
 	targetDest.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
 }
@@ -183,6 +186,7 @@ bool Card::playCard(int p_numberOfCardsOnBoard)
 	cardState = onBoard;
 	targetDest.y = SCREEN_HEIGHT/2;
 	targetDest.x = SCREEN_WIDTH/8 + p_numberOfCardsOnBoard * SCREEN_WIDTH/8;
+	cardPosition = p_numberOfCardsOnBoard;
 
 	return true;
 }

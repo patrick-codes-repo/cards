@@ -77,16 +77,20 @@ int playGame()
 
 		updatePlayerHand(handFillers[handDisplayController], deck[handDisplayController], mouse);
 
-		if (!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON_LMASK))
-			selectedIndex = -1;
-
-		if(selectedIndex > -1)
-			deck[handDisplayController][selectedIndex].moveCard(mouse);
-
 		for(Card& c : cardsOnBoard)
 		{
 			c.update(mouse);
 		}
+
+		if (!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON_LMASK))
+			selectedIndex = -1;
+
+		if(selectedIndex > -1 && selectedIndex < 10)
+			deck[handDisplayController][selectedIndex].moveCard(mouse);
+
+		if(selectedIndex >= 10)
+			cardsOnBoard[selectedIndex - 10].moveCard(mouse);
+
 
 		opponent->updateCards(mouse);
 
@@ -109,7 +113,15 @@ int playGame()
 					for(int i = 0; i < 4; i++)
 					{
 						if(deck[handDisplayController][i].getIsSelected() && (deck[handDisplayController][i].getCardState() == inHand))
+						{
 							selectedIndex = i;
+							break;
+						}
+					}
+					for(int i = 0; i < cardsOnBoard.size(); i++)
+					{
+						if(cardsOnBoard[i].getIsSelected()) 
+							selectedIndex = i + 10; 
 					}
 					break;
 				case SDL_MOUSEBUTTONUP:
@@ -206,12 +218,9 @@ int playGame()
 		scrollDeckDown.draw(renderer);
 		skip.draw(renderer);
 		
-		for(Card& c : cardsOnBoard)
-		{
-			c.render(renderer);
-		}
-
+		renderCardsOnBoard(cardsOnBoard, selectedIndex);
 		renderPlayerHand(deck[handDisplayController], handFillers[handDisplayController], selectedIndex);
+		renderSelectedCard(selectedIndex, cardsOnBoard, deck[handDisplayController]);
 
 		mouse.draw(renderer);
 
@@ -291,8 +300,23 @@ void renderPlayerHand(Card p_currentHandCards[], DummyCard p_currentHandFillers[
 		if(i != p_selectedIndex)
 			(p_currentHandCards[i].getCardState() != onBoard) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer);
 	}
-	if(p_selectedIndex > -1)
-		(p_currentHandCards[p_selectedIndex].getCardState() != onBoard) ? p_currentHandCards[p_selectedIndex].render(renderer) : p_currentHandFillers[p_selectedIndex].render(renderer);
+}
+
+void renderCardsOnBoard(vector<Card> p_cardsOnBoard, int &p_selectedIndex)
+{
+	for(int i = 0; i < p_cardsOnBoard.size(); i++)
+	{
+		if(i != p_selectedIndex - 10)
+			p_cardsOnBoard[i].render(renderer); 
+	}
+}
+
+void renderSelectedCard(int &p_selectedIndex, vector<Card> p_cardsOnBoard, Card p_currentHandCards[])
+{
+	if (p_selectedIndex < 0)
+		return;
+
+	(p_selectedIndex < 10) ? p_currentHandCards[p_selectedIndex].render(renderer) : p_cardsOnBoard[p_selectedIndex - 10].render(renderer);
 }
 
 void endRound()

@@ -35,4 +35,5 @@ class Card {
 		bool isSelected = false;
 		void changeHealthDisplayed(SDL_Renderer* p_renderer);
 		void moveCardToSide();
+		int cardPosition;
 };
