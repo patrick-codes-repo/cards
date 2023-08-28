@@ -9,7 +9,7 @@
 
 class Card {
 	public:
-		Card(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_attack);
+		Card(SDL_Renderer* p_renderer, short cost,  short p_arrayPosition, short p_health, short p_damage);
 		void render(SDL_Renderer* p_renderer);
 		void damaged(SDL_Renderer* p_renderer, short p_damageTaken);
 		void update(Mouse p_mouse);
@@ -20,17 +20,22 @@ class Card {
 		bool playCard(int p_numberOfCardsOnBoard);
 		state getCardState();
 		void setStateInHand();
+		void attack();
+		short getCost();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
 		SDL_Rect targetDest;
 		SDL_Rect healthTextDest;
-		SDL_Rect attackTextDest;
-		short ARRAY_POSITION;
+		SDL_Rect damageTextDest;
+		SDL_Rect costTextDest;
 		short health;
-		short attack;
+		short damage;
+		short cost;
 		char healthBuffer[50];
-		char attackBuffer[50];
+		char damageBuffer[50];
+		char costBuffer[50];
+		short ARRAY_POSITION;
 		state cardState = inHand;
 		bool isSelected = false;
 		void changeHealthDisplayed(SDL_Renderer* p_renderer);

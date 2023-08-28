@@ -34,8 +34,8 @@ extern SDL_Rect manaTextDest;
 extern Opponent* opponent;
 	
 int playGame();
-void checkIfCardPlayed(Card p_displayedCards[], vector<Card> &p_cardsOnBoard, DummyCard p_dummyCard[]);
-void playCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard);
+void checkIfCardPlayed(Card &p_displayedCards, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard);
+void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard);
 void incrementHandDisplayController();
 void decrementHandDisplayController();
 bool checkIfCardOnSide(Card p_displayedCards[], short &p_onsideCardIndex);
@@ -49,3 +49,4 @@ void drawPlayerHealth();
 void renderCardsOnBoard(vector<Card> p_cardsOnBoard, int &p_selectedIndex);
 void renderSelectedCard();
 void renderSelectedCard(int &p_selectedIndex, vector<Card> p_cardsOnBoard, Card p_currentHandCards[]);
+void checkIfCardAttacked(Card &selectedCard);

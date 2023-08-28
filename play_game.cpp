@@ -36,9 +36,9 @@ int playGame()
 	SDL_Texture* card_image = window.loadTexture("resources/card.png");
 
 	Card deck[][4] = {
-		{Card(renderer, 0, 1, 0), Card(renderer, 1, 0, 0), Card(renderer, 2, 2, 2), Card(renderer, 3, 0, 0)},
-		{Card(renderer, 0, 2, 2), Card(renderer, 1, 1, 2), Card(renderer, 2, 1, 1), Card(renderer, 3, 0, 0)},
-		{Card(renderer, 0, 2, 3), Card(renderer, 1, 2, 2), Card(renderer, 2, 3, 2), Card(renderer, 3, 0, 0)} 
+		{Card(renderer, 0, 0, 1, 0), Card(renderer, 0, 1, 0, 0), Card(renderer, 0, 2, 2, 2), Card(renderer, 0, 3, 0, 0)},
+		{Card(renderer, 1, 0, 2, 2), Card(renderer, 1, 1, 1, 2), Card(renderer, 1, 2, 1, 1), Card(renderer, 1, 3, 0, 0)},
+		{Card(renderer, 2, 0, 2, 3), Card(renderer, 2, 1, 2, 2), Card(renderer, 2, 2, 3, 2), Card(renderer, 2, 3, 0, 0)} 
 	};
 
 	DummyCard handFillers[][4] = {
@@ -158,28 +158,24 @@ int playGame()
 
 						if(cardOnside)
 						{
+							deck[handDisplayController][cardOnSideIndex].setStateInHand();
+							deck[handDisplayController][cardOnSideIndex].resetCardPosition();
+
 							for (int i = 0; i < cardsOnBoard.size(); i++)
 							{
 								if(cardsOnBoard.at(i).getIsSelected())
 								{
 									cout << "card " << i << " clicked" << endl;
 									replaceCard(deck[handDisplayController][cardOnSideIndex], cardsOnBoard, handFillers[handDisplayController][cardOnSideIndex], i);
-								}
-							}
-							for(int i = 3; i >=0; i--)
-							{
-								if(deck[handDisplayController][i].getCardState() == onSide)
-								{
-									deck[handDisplayController][i].setStateInHand();
-									deck[handDisplayController][i].resetCardPosition();
 									break;
 								}
 							}
-
 						}
 
-						if (selectedIndex > -1)
-							checkIfCardPlayed(deck[handDisplayController], cardsOnBoard, handFillers[handDisplayController]);
+						if (selectedIndex > -1 && selectedIndex < 10)
+							checkIfCardPlayed(deck[handDisplayController][selectedIndex], cardsOnBoard, handFillers[handDisplayController][selectedIndex]);
+						if(selectedIndex >= 10)
+							checkIfCardAttacked(cardsOnBoard[selectedIndex - 10]);
 					}
 					break;
 				case SDL_MOUSEWHEEL:
@@ -228,25 +224,32 @@ int playGame()
 	}
 }
 
-void checkIfCardPlayed(Card p_displayedCards[], vector<Card> &p_cardsOnBoard, DummyCard p_dummyCard[])
+void checkIfCardPlayed(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard)
 {
-	(p_displayedCards[0].getCardY() < 700 && (p_displayedCards[0].getCardState() != onBoard)) ? playCard(p_displayedCards[0], p_cardsOnBoard, p_dummyCard[0]) : p_displayedCards[0].resetCardPosition();
-	(p_displayedCards[1].getCardY() < 700 && (p_displayedCards[1].getCardState() != onBoard)) ? playCard(p_displayedCards[1], p_cardsOnBoard, p_dummyCard[1]) : p_displayedCards[1].resetCardPosition();
-	(p_displayedCards[2].getCardY() < 700 && (p_displayedCards[2].getCardState() != onBoard)) ? playCard(p_displayedCards[2], p_cardsOnBoard, p_dummyCard[2]) : p_displayedCards[2].resetCardPosition();
-	(p_displayedCards[3].getCardY() < 700 && (p_displayedCards[3].getCardState() != onBoard)) ? playCard(p_displayedCards[3], p_cardsOnBoard, p_dummyCard[3]) : p_displayedCards[3].resetCardPosition();
+	if(selectedCard.getCost() > playerMana)
+		return;
+
+	(selectedCard.getCardY() < 700 && (selectedCard.getCardState() != onBoard)) ? playCard(selectedCard, p_cardsOnBoard, p_dummyCard) : selectedCard.resetCardPosition();
 }
 
-void playCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard)
+void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard)
 {
-	if(p_currentCard.getCardState() == inHand)
+	if(selectedCard.getCardState() == inHand)
 	{
-		if(p_currentCard.playCard(p_cardsOnBoard.size()))
+		if(selectedCard.playCard(p_cardsOnBoard.size()))
 		{
-			p_cardsOnBoard.push_back(p_currentCard);
+			playerMana -= selectedCard.getCost();
+			drawPlayerMana();
+			p_cardsOnBoard.push_back(selectedCard);
 			p_dummyCard.setIsVisible();
 			return;
 		}
 	}
+}
+
+void checkIfCardAttacked(Card &selectedCard)
+{
+	(selectedCard.getCardY() < 1400 && (selectedCard.getCardState() == onBoard)) ? selectedCard.attack() : selectedCard.resetCardPosition();
 }
 
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
