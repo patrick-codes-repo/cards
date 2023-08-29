@@ -93,7 +93,6 @@ Card::Card(SDL_Renderer* p_renderer, short p_cost, short p_arrayPosition, short 
 
 	if(SDL_SetRenderTarget(p_renderer, NULL) < 0)
 		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
-	cout << "done with\n";
 }
 
 void Card::update(Mouse p_mouse)

@@ -123,6 +123,29 @@ int playGame()
 						if(cardsOnBoard[i].getIsSelected()) 
 							selectedIndex = i + 10; 
 					}
+					if(cardOnside)
+						{
+							//handle this in separate function
+							bool t = false;
+							for (int i = 0; i < cardsOnBoard.size(); i++)
+							{
+								if(cardsOnBoard.at(i).getIsSelected())
+								{
+									cout << "card " << i << " clicked" << endl;
+									replaceCard(deck[handDisplayController][cardOnSideIndex], cardsOnBoard, handFillers[handDisplayController][cardOnSideIndex], i);
+									t = true;
+									break;
+								}
+							}
+							if(!t)
+							{
+							deck[handDisplayController][cardOnSideIndex].setStateInHand();
+							deck[handDisplayController][cardOnSideIndex].resetCardPosition();
+							
+
+							}
+						}
+
 					break;
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
@@ -143,12 +166,12 @@ int playGame()
 
 						if (scrollDeckup.getIsSelected() && !cardOnside)
 						{
-							incrementHandDisplayController();
+							decrementHandDisplayController();
 						}
 
 						if (scrollDeckDown.getIsSelected() && !cardOnside)
 						{
-							decrementHandDisplayController();
+							incrementHandDisplayController();
 						}
 
 						if (skip.getIsSelected() && !cardOnside)
@@ -156,23 +179,7 @@ int playGame()
 							endRound();
 						}
 
-						if(cardOnside)
-						{
-							deck[handDisplayController][cardOnSideIndex].setStateInHand();
-							deck[handDisplayController][cardOnSideIndex].resetCardPosition();
-
-							for (int i = 0; i < cardsOnBoard.size(); i++)
-							{
-								if(cardsOnBoard.at(i).getIsSelected())
-								{
-									cout << "card " << i << " clicked" << endl;
-									replaceCard(deck[handDisplayController][cardOnSideIndex], cardsOnBoard, handFillers[handDisplayController][cardOnSideIndex], i);
-									break;
-								}
-							}
-						}
-
-						if (selectedIndex > -1 && selectedIndex < 10)
+						if(selectedIndex > -1 && selectedIndex < 10)
 							checkIfCardPlayed(deck[handDisplayController][selectedIndex], cardsOnBoard, handFillers[handDisplayController][selectedIndex]);
 						if(selectedIndex >= 10)
 							checkIfCardAttacked(cardsOnBoard[selectedIndex - 10]);
@@ -227,7 +234,10 @@ int playGame()
 void checkIfCardPlayed(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard)
 {
 	if(selectedCard.getCost() > playerMana)
+	{
+		selectedCard.resetCardPosition();
 		return;
+	}
 
 	(selectedCard.getCardY() < 700 && (selectedCard.getCardState() != onBoard)) ? playCard(selectedCard, p_cardsOnBoard, p_dummyCard) : selectedCard.resetCardPosition();
 }
@@ -255,6 +265,8 @@ void checkIfCardAttacked(Card &selectedCard)
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
 {
 	p_currentCard.playCard(p_positionToReplace);
+	playerMana -= p_currentCard.getCost();
+	drawPlayerMana();
 	p_cardsOnBoard[p_positionToReplace] = p_currentCard;
 	p_dummyCard.setIsVisible();
 }	
@@ -328,7 +340,7 @@ void endRound()
 	playersTurn = (roundNumber % 2 != 0);
 	drawRoundNumber();
 	
-	playerMana++;
+	playerMana = roundNumber;
 	drawPlayerMana();
 
 	opponent->incrementMana();
