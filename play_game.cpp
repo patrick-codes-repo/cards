@@ -91,7 +91,6 @@ int playGame()
 		if(selectedIndex >= 10)
 			cardsOnBoard[selectedIndex - 10].moveCard(mouse);
 
-
 		opponent->updateCards(mouse);
 
 		cardOnside = checkIfCardOnSide(deck[handDisplayController], cardOnSideIndex);
@@ -124,28 +123,7 @@ int playGame()
 							selectedIndex = i + 10; 
 					}
 					if(cardOnside)
-						{
-							//handle this in separate function
-							bool t = false;
-							for (int i = 0; i < cardsOnBoard.size(); i++)
-							{
-								if(cardsOnBoard.at(i).getIsSelected())
-								{
-									cout << "card " << i << " clicked" << endl;
-									replaceCard(deck[handDisplayController][cardOnSideIndex], cardsOnBoard, handFillers[handDisplayController][cardOnSideIndex], i);
-									t = true;
-									break;
-								}
-							}
-							if(!t)
-							{
-							deck[handDisplayController][cardOnSideIndex].setStateInHand();
-							deck[handDisplayController][cardOnSideIndex].resetCardPosition();
-							
-
-							}
-						}
-
+						cardOnSideHandler(cardOnSideIndex, cardsOnBoard, deck[handDisplayController], handFillers[handDisplayController]);
 					break;
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
@@ -412,4 +390,34 @@ void drawPlayerMana()
 	SDL_FreeSurface(playerManaSurface);
 
 	TTF_Quit();
+}
+
+void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card currentHand[], DummyCard p_currentHandFillers[])
+{
+	bool cardOnBoardReplaced = false;
+
+	for (int i = 0; i < cardsOnBoard.size(); i++)
+	{
+		if(cardsOnBoard.at(i).getIsSelected())
+		{
+			if(cardsOnBoard.at(i).getCardType() == spell)
+			{
+				//below did not print
+				cout << "spell casted at player card " << i << endl;
+				//below should replaced with proper functionality
+				//Spell card should be destroyed
+				p_currentHandFillers[cardOnSideIndex].setIsVisible();
+				break;
+			}
+			cout << "card " << i << " replaced" << endl;
+			replaceCard(currentHand[cardOnSideIndex], cardsOnBoard, p_currentHandFillers[cardOnSideIndex], i);
+			cardOnBoardReplaced = true;
+			break;
+		}
+	}
+	if(!cardOnBoardReplaced)
+	{
+		currentHand[cardOnSideIndex].setStateInHand();
+		currentHand[cardOnSideIndex].resetCardPosition();
+	}
 }

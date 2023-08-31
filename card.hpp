@@ -22,6 +22,7 @@ class Card {
 		void setStateInHand();
 		void attack();
 		short getCost();
+		type getCardType();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -41,4 +42,5 @@ class Card {
 		void changeHealthDisplayed(SDL_Renderer* p_renderer);
 		void moveCardToSide();
 		int cardPosition;
+		type cardType;
 };

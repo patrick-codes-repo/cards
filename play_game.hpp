@@ -50,3 +50,4 @@ void renderCardsOnBoard(vector<Card> p_cardsOnBoard, int &p_selectedIndex);
 void renderSelectedCard();
 void renderSelectedCard(int &p_selectedIndex, vector<Card> p_cardsOnBoard, Card p_currentHandCards[]);
 void checkIfCardAttacked(Card &selectedCard);
+void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card currentHand[], DummyCard p_currentHandFillers[]);

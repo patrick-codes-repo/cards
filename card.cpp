@@ -7,6 +7,9 @@ using namespace std;
 Card::Card(SDL_Renderer* p_renderer, short p_cost, short p_arrayPosition, short p_health, short p_damage)
 	:ARRAY_POSITION(p_arrayPosition), health(p_health), damage(p_damage), cost(p_cost)
 {
+	if(health < 1)
+		cardType = spell;
+
 	targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
 	noNumbers = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
 
@@ -214,7 +217,7 @@ void Card::resetCardPosition()
 
 bool Card::playCard(int p_numberOfCardsOnBoard)
 {
-	if(p_numberOfCardsOnBoard >= 6)
+	if(p_numberOfCardsOnBoard >= 6 || cardType == spell)
 	{
 		moveCardToSide();
 		return false;
@@ -252,4 +255,9 @@ void Card::setStateInHand()
 short Card::getCost()
 {
 	return cost;
+}
+
+type Card::getCardType()
+{
+	return cardType;
 }
