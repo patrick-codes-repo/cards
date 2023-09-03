@@ -91,15 +91,15 @@ void OpponentCard::createCardTexture(SDL_Renderer* p_renderer)
 
 void OpponentCard::update(Mouse p_mouse)
 {
-	return;
-	/* if(SDL_HasIntersection(&targetDest, &p_mouse.collision_rect)) */
-	/* { */
-	/* 	//display card information */
-	/* 	isSelected = true; */
-	/* 	return; */
-	/* } */
+	/* return; */
+	if(SDL_HasIntersection(&targetDest, &p_mouse.collisionRect))
+	{
+		//display card information
+		isSelected = true;
+		return;
+	}
 
-	/* isSelected = false; */
+	isSelected = false;
 }
 
 void OpponentCard::render(SDL_Renderer* p_renderer)

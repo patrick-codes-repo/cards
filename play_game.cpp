@@ -128,31 +128,31 @@ int playGame()
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
 					{
-						if (mainMenuButton.getIsSelected())
+						if (mainMenuButton.getIsSelected() && selectedIndex < 0)
 						{
 							cout << "main menu clicked" << endl;
 							window.cleanUp();
 							return 1;
 						}
 
-						if (testFunctionButton.getIsSelected())
+						if (testFunctionButton.getIsSelected() && selectedIndex < 0)
 						{
 							cout << "test button clicked" << endl;
 							/* test.damaged(renderer, 2); */
 							opponent->playCard();
 						}
 
-						if (scrollDeckup.getIsSelected() && !cardOnside)
+						if (scrollDeckup.getIsSelected() && !cardOnside && selectedIndex < 0)
 						{
 							decrementHandDisplayController();
 						}
 
-						if (scrollDeckDown.getIsSelected() && !cardOnside)
+						if (scrollDeckDown.getIsSelected() && !cardOnside && selectedIndex < 0)
 						{
 							incrementHandDisplayController();
 						}
 
-						if (skip.getIsSelected() && !cardOnside)
+						if (skip.getIsSelected() && !cardOnside && selectedIndex < 0)
 						{
 							endRound();
 						}
@@ -418,6 +418,9 @@ void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card 
 				return;
 			}
 		}
+		if(opponent->getSelectedCardIndex() > -1)
+			cout << "spell casted at opponent card " << opponent->getSelectedCardIndex() << endl;
+			//add playSpell call
 	}
 
 	for (int i = 0; i < cardsOnBoard.size(); i++)

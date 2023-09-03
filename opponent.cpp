@@ -1,9 +1,3 @@
-#ifdef _WIN32
-#include <windows.h>
-#else
-#include <unistd.h> 
-#endif
-
 #include <iostream>
 
 #include "opponent.hpp"
@@ -119,4 +113,14 @@ void Opponent::drawMana()
 	SDL_FreeSurface(manaSurface);
 
 	TTF_Quit();
+}
+
+short Opponent::getSelectedCardIndex()
+{
+	for(int i = 0; i < cardsOnBoard.size(); i++)
+	{
+		if(cardsOnBoard.at(i).getIsSelected())
+			return i;
+	}
+	return -1;
 }
