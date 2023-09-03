@@ -237,7 +237,7 @@ void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dum
 
 void checkIfCardAttacked(Card &selectedCard)
 {
-	(selectedCard.getCardY() < 1400 && (selectedCard.getCardState() == onBoard)) ? selectedCard.attack() : selectedCard.resetCardPosition();
+	(selectedCard.getCardY() < 400 && (selectedCard.getCardState() == onBoard)) ? selectedCard.attack() : selectedCard.resetCardPosition();
 }
 
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
@@ -248,6 +248,16 @@ void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p
 	p_cardsOnBoard[p_positionToReplace] = p_currentCard;
 	p_dummyCard.setIsVisible();
 }	
+
+void playSpell(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
+{
+	/* p_currentCard.playCard(p_positionToReplace); */
+	playerMana -= p_currentCard.getCost();
+	drawPlayerMana();
+	/* p_cardsOnBoard[p_positionToReplace] = p_currentCard; */
+	p_dummyCard.setIsVisible();
+}	
+
 
 void incrementHandDisplayController()
 {
@@ -291,7 +301,8 @@ void renderPlayerHand(Card p_currentHandCards[], DummyCard p_currentHandFillers[
 	for(int i = 0; i < 4; i++)
 	{
 		if(i != p_selectedIndex)
-			(p_currentHandCards[i].getCardState() != onBoard) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer);
+			(!p_currentHandFillers[i].getIsVisible()) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer);
+			/* (p_currentHandCards[i].getCardState() != onBoard) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer); */
 	}
 }
 
@@ -396,19 +407,23 @@ void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card 
 {
 	bool cardOnBoardReplaced = false;
 
+	if(currentHand[cardOnSideIndex].getCardType() == spell)
+	{
+		for (int i = 0; i < cardsOnBoard.size(); i++)
+		{
+			if(cardsOnBoard.at(i).getIsSelected())
+			{
+				cout << "spell casted at player card " << i << endl;
+				playSpell(currentHand[cardOnSideIndex], cardsOnBoard, p_currentHandFillers[cardOnSideIndex], i);
+				return;
+			}
+		}
+	}
+
 	for (int i = 0; i < cardsOnBoard.size(); i++)
 	{
 		if(cardsOnBoard.at(i).getIsSelected())
 		{
-			if(cardsOnBoard.at(i).getCardType() == spell)
-			{
-				//below did not print
-				cout << "spell casted at player card " << i << endl;
-				//below should replaced with proper functionality
-				//Spell card should be destroyed
-				p_currentHandFillers[cardOnSideIndex].setIsVisible();
-				break;
-			}
 			cout << "card " << i << " replaced" << endl;
 			replaceCard(currentHand[cardOnSideIndex], cardsOnBoard, p_currentHandFillers[cardOnSideIndex], i);
 			cardOnBoardReplaced = true;
