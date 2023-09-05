@@ -4,8 +4,8 @@
 
 using namespace std;
 
-OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_attack)
-	:ARRAY_POSITION(p_arrayPosition), health(p_health), attack(p_attack)
+OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_attack, short p_cost)
+	:ARRAY_POSITION(p_arrayPosition), health(p_health), attack(p_attack), cost(p_cost)
 {
 }
 
@@ -154,4 +154,9 @@ bool OpponentCard::getHasBeenPlayed()
 bool OpponentCard::getIsSelected()
 {
 	return isSelected;
+}
+
+short OpponentCard::getCost()
+{
+	return cost;
 }

@@ -15,8 +15,7 @@ class Opponent {
 		void renderMana();
 		void renderCards();
 		void updateCards(Mouse p_mouse);
-		short getMana();
-		void incrementMana();
+		void setMana(short &newManaAmount);
 		void drawMana();
 		short getSelectedCardIndex();
 	private:
@@ -28,10 +27,10 @@ class Opponent {
 		short health;
 		char healthBuffer[50];
 		OpponentCard deck[4] = {
-			OpponentCard(renderer, 0, 1, 0), 
-			OpponentCard(renderer, 1, 0, 0), 
-			OpponentCard(renderer, 2, 2, 2), 
-			OpponentCard(renderer, 3, 0, 0)
+			OpponentCard(renderer, 0, 1, 0, 1), 
+			OpponentCard(renderer, 1, 0, 0, 2), 
+			OpponentCard(renderer, 2, 2, 2, 3), 
+			OpponentCard(renderer, 3, 0, 0, 4)
 		};
 		vector<OpponentCard> cardsOnBoard;
 		short chooseCard();

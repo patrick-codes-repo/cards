@@ -249,7 +249,7 @@ void Card::setStateInHand()
 }
  void Card::attack()
 {
-	cout << cardPosition << " is attackng\n"; 
+	cout << "player card at posotion " << cardPosition << " is attackng\n"; 
 }
 
 short Card::getCost()

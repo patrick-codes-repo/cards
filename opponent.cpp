@@ -76,22 +76,24 @@ void Opponent::playCard()
 
 	deck[cardToPlay].playCard(cardsOnBoard.size(), renderer);
 	cardsOnBoard.push_back(deck[cardToPlay]);
+	mana -= deck[cardToPlay].getCost();
+	drawMana();
 }
 
 short Opponent::chooseCard()
 { 
 	for(short i = 0; i < 4; i++)
 	{
-		if (!deck[i].getHasBeenPlayed())
+		if(!deck[i].getHasBeenPlayed() && mana >= deck[i].getCost())
 			return i;
 	}
 
 	return -1;
 }
 
-void Opponent::incrementMana()
+void Opponent::setMana(short &newManaAmount)
 {
-	mana++;
+	mana = newManaAmount;
 }
 
 void Opponent::drawMana()

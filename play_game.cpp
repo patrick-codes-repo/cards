@@ -60,6 +60,7 @@ int playGame()
 	bool cardOnside = false;
 	short cardOnSideIndex;
 	int selectedIndex;
+	bool playerSkipped;
 
 	/* Opponent* opponent;//;(renderer, 50); */
 	opponent = new Opponent(renderer, 50);
@@ -74,6 +75,9 @@ int playGame()
 		scrollDeckup.update(mouse);
 		scrollDeckDown.update(mouse);
 		skip.update(mouse);
+
+		/* if(playerSkipped && oppnent didnt play card) */
+		/* 	endRound(); */
 
 		updatePlayerHand(handFillers[handDisplayController], deck[handDisplayController], mouse);
 
@@ -98,7 +102,8 @@ int playGame()
 		if(!playersTurn)
 		{
 			opponent->playCard();
-			endRound();
+			/* endRound(); */
+			endTurn();
 		}	
 
 		while(SDL_PollEvent(&event))
@@ -154,7 +159,8 @@ int playGame()
 
 						if (skip.getIsSelected() && !cardOnside && selectedIndex < 0)
 						{
-							endRound();
+							/* endRound(); */
+							endTurn();
 						}
 
 						if(selectedIndex > -1 && selectedIndex < 10)
@@ -230,6 +236,7 @@ void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dum
 			drawPlayerMana();
 			p_cardsOnBoard.push_back(selectedCard);
 			p_dummyCard.setIsVisible();
+			endTurn();
 			return;
 		}
 	}
@@ -237,7 +244,17 @@ void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dum
 
 void checkIfCardAttacked(Card &selectedCard)
 {
-	(selectedCard.getCardY() < 400 && (selectedCard.getCardState() == onBoard)) ? selectedCard.attack() : selectedCard.resetCardPosition();
+	(selectedCard.getCardY() < 400 && (selectedCard.getCardState() == onBoard)) ? attack(selectedCard) : selectedCard.resetCardPosition();
+}
+
+void attack(Card &selectedCard)
+{
+	if(opponent->getSelectedCardIndex() > -1)
+	{
+		cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl;
+		return;
+	}
+	selectedCard.attack();
 }
 
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
@@ -249,7 +266,7 @@ void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p
 	p_dummyCard.setIsVisible();
 }	
 
-void playSpell(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
+void playSpell(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard)
 {
 	/* p_currentCard.playCard(p_positionToReplace); */
 	playerMana -= p_currentCard.getCost();
@@ -323,6 +340,11 @@ void renderSelectedCard(int &p_selectedIndex, vector<Card> p_cardsOnBoard, Card 
 	(p_selectedIndex < 10) ? p_currentHandCards[p_selectedIndex].render(renderer) : p_cardsOnBoard[p_selectedIndex - 10].render(renderer);
 }
 
+void endTurn()
+{
+	playersTurn = !playersTurn;
+}
+
 void endRound()
 {
 	roundNumber++;
@@ -332,7 +354,7 @@ void endRound()
 	playerMana = roundNumber;
 	drawPlayerMana();
 
-	opponent->incrementMana();
+	opponent->setMana(roundNumber);
 	opponent->drawMana();
 }
 
@@ -414,13 +436,15 @@ void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card 
 			if(cardsOnBoard.at(i).getIsSelected())
 			{
 				cout << "spell casted at player card " << i << endl;
-				playSpell(currentHand[cardOnSideIndex], cardsOnBoard, p_currentHandFillers[cardOnSideIndex], i);
+				playSpell(currentHand[cardOnSideIndex], cardsOnBoard, p_currentHandFillers[cardOnSideIndex]);
 				return;
 			}
 		}
 		if(opponent->getSelectedCardIndex() > -1)
+		{
 			cout << "spell casted at opponent card " << opponent->getSelectedCardIndex() << endl;
-			//add playSpell call
+			playSpell(currentHand[cardOnSideIndex], cardsOnBoard, p_currentHandFillers[cardOnSideIndex]);
+		}
 	}
 
 	for (int i = 0; i < cardsOnBoard.size(); i++)
