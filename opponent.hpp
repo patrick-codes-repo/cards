@@ -10,7 +10,7 @@ class Opponent {
 		Opponent(SDL_Renderer* p_renderer, short p_health);
 		void damaged();
 		void healed();
-		void playCard();
+		bool playCard();
 		void renderHealth();
 		void renderMana();
 		void renderCards();

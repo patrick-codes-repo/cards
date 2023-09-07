@@ -10,6 +10,8 @@ short roundNumber = 1;
 char roundNumberBuffer[50];
 short playerMana = 1;
 char playerManaBuffer[10];
+bool playerSkipped = false;
+bool opponentSkipped = false;
 
 SDL_Texture* roundNumberTexture; 
 SDL_Texture* playerHealthTexture; 
@@ -60,7 +62,6 @@ int playGame()
 	bool cardOnside = false;
 	short cardOnSideIndex;
 	int selectedIndex;
-	bool playerSkipped;
 
 	/* Opponent* opponent;//;(renderer, 50); */
 	opponent = new Opponent(renderer, 50);
@@ -76,8 +77,8 @@ int playGame()
 		scrollDeckDown.update(mouse);
 		skip.update(mouse);
 
-		/* if(playerSkipped && oppnent didnt play card) */
-		/* 	endRound(); */
+		if(playerSkipped && opponentSkipped)
+			endRound();
 
 		updatePlayerHand(handFillers[handDisplayController], deck[handDisplayController], mouse);
 
@@ -101,7 +102,13 @@ int playGame()
 
 		if(!playersTurn)
 		{
-			opponent->playCard();
+			if(opponent->playCard())
+			{
+				playerSkipped = false;
+				opponentSkipped = false;
+			}
+			else
+				opponentSkipped = true;
 			/* endRound(); */
 			endTurn();
 		}	
@@ -160,6 +167,7 @@ int playGame()
 						if (skip.getIsSelected() && !cardOnside && selectedIndex < 0)
 						{
 							/* endRound(); */
+							playerSkipped = true;
 							endTurn();
 						}
 
@@ -236,6 +244,8 @@ void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dum
 			drawPlayerMana();
 			p_cardsOnBoard.push_back(selectedCard);
 			p_dummyCard.setIsVisible();
+			playerSkipped = false;
+			opponentSkipped = false;
 			endTurn();
 			return;
 		}
@@ -347,6 +357,9 @@ void endTurn()
 
 void endRound()
 {
+	playerSkipped = false;
+	opponentSkipped = false;
+
 	roundNumber++;
 	playersTurn = (roundNumber % 2 != 0);
 	drawRoundNumber();

@@ -67,17 +67,18 @@ void Opponent::renderCards()
 		}
 }
 
-void Opponent::playCard()
+bool Opponent::playCard()
 {
 	short cardToPlay = chooseCard();
 
 	if(cardToPlay < 0)
-		return;
+		return false;
 
 	deck[cardToPlay].playCard(cardsOnBoard.size(), renderer);
 	cardsOnBoard.push_back(deck[cardToPlay]);
 	mana -= deck[cardToPlay].getCost();
 	drawMana();
+	return true;
 }
 
 short Opponent::chooseCard()
