@@ -8,7 +8,7 @@ using namespace std;
 class Opponent {
 	public:
 		Opponent(SDL_Renderer* p_renderer, short p_health);
-		void damaged();
+		void damaged(short damageTaken);
 		void healed();
 		bool playCard();
 		void renderHealth();
@@ -17,6 +17,7 @@ class Opponent {
 		void updateCards(Mouse p_mouse);
 		void setMana(short &newManaAmount);
 		void drawMana();
+		void drawHealth();
 		short getSelectedCardIndex();
 	private:
 		SDL_Renderer* renderer;

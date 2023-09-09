@@ -45,14 +45,14 @@ void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p
 void playSpell(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard);
 void updatePlayerHand(DummyCard p_currentHandFillers[], Card p_currentHandCards[], Mouse p_mouse);
 void renderPlayerHand(Card p_currentHandCards[], DummyCard p_currentHandFillers[], int &p_selectedIndex);
-void endRound();
+void endRound(vector<Card> &cardsOnBoard);
 void drawRoundNumber();
 void drawPlayerMana();
 void drawPlayerHealth();
 void renderCardsOnBoard(vector<Card> p_cardsOnBoard, int &p_selectedIndex);
 void renderSelectedCard();
 void renderSelectedCard(int &p_selectedIndex, vector<Card> p_cardsOnBoard, Card p_currentHandCards[]);
-void checkIfCardAttacked(Card &selectedCard);
+void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking);
 void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card currentHand[], DummyCard p_currentHandFillers[]);
 void endTurn();
 void attack(Card &selectedCard);

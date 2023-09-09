@@ -249,6 +249,8 @@ void Card::setStateInHand()
 }
  void Card::attack()
 {
+	attacked = true;
+	attacking = false;
 	cout << "player card at posotion " << cardPosition << " is attackng\n"; 
 }
 
@@ -260,4 +262,29 @@ short Card::getCost()
 type Card::getCardType()
 {
 	return cardType;
+}
+
+short Card::getDamage()
+{
+	return damage;
+}
+
+bool Card::getAttacked()
+{
+	return attacked;
+}
+
+void Card::resetAttacked()
+{
+	attacked = false;
+}
+
+void Card::setAttacking()
+{
+	attacking = true;
+}
+
+bool Card::getAttacking()
+{
+	return attacking;
 }

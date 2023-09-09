@@ -62,6 +62,7 @@ int playGame()
 	bool cardOnside = false;
 	short cardOnSideIndex;
 	int selectedIndex;
+	bool playerAttacking = false;
 
 	/* Opponent* opponent;//;(renderer, 50); */
 	opponent = new Opponent(renderer, 50);
@@ -78,7 +79,7 @@ int playGame()
 		skip.update(mouse);
 
 		if(playerSkipped && opponentSkipped)
-			endRound();
+			endRound(cardsOnBoard);
 
 		updatePlayerHand(handFillers[handDisplayController], deck[handDisplayController], mouse);
 
@@ -166,15 +167,26 @@ int playGame()
 
 						if (skip.getIsSelected() && !cardOnside && selectedIndex < 0)
 						{
-							/* endRound(); */
-							playerSkipped = true;
-							endTurn();
+							if(playerAttacking)
+							{
+								for(Card& c : cardsOnBoard)
+								{
+									if(c.getAttacking())
+										attack(c);
+								}
+								playerAttacking = false;
+							}
+							else
+							{
+								playerSkipped = true;
+								endTurn();
+							}
 						}
 
 						if(selectedIndex > -1 && selectedIndex < 10)
 							checkIfCardPlayed(deck[handDisplayController][selectedIndex], cardsOnBoard, handFillers[handDisplayController][selectedIndex]);
 						if(selectedIndex >= 10)
-							checkIfCardAttacked(cardsOnBoard[selectedIndex - 10]);
+							checkIfCardAttacked(cardsOnBoard[selectedIndex - 10], playerAttacking);
 					}
 					break;
 				case SDL_MOUSEWHEEL:
@@ -252,19 +264,35 @@ void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dum
 	}
 }
 
-void checkIfCardAttacked(Card &selectedCard)
+void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 {
-	(selectedCard.getCardY() < 400 && (selectedCard.getCardState() == onBoard)) ? attack(selectedCard) : selectedCard.resetCardPosition();
+	if(selectedCard.getAttacked())
+		return;
+
+	if(selectedCard.getCardY() < 400 && selectedCard.getCardState() == onBoard)
+	{
+		if(!playerAttacking)
+			playerAttacking = true;
+
+		selectedCard.setAttacking();
+		return;
+	}
+
+	selectedCard.resetCardPosition();
+
+	/* (selectedCard.getCardY() < 400 && (selectedCard.getCardState() == onBoard)) ? selectedCard.setAttacking() : selectedCard.resetCardPosition(); */
 }
 
 void attack(Card &selectedCard)
 {
 	if(opponent->getSelectedCardIndex() > -1)
 	{
+		//needs to call attack somehow so attacked is set to true in the card
 		cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl;
 		return;
 	}
 	selectedCard.attack();
+	opponent->damaged(selectedCard.getDamage());
 }
 
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
@@ -355,7 +383,7 @@ void endTurn()
 	playersTurn = !playersTurn;
 }
 
-void endRound()
+void endRound(vector<Card> &cardsOnBoard)
 {
 	playerSkipped = false;
 	opponentSkipped = false;
@@ -369,6 +397,11 @@ void endRound()
 
 	opponent->setMana(roundNumber);
 	opponent->drawMana();
+
+	for(Card& c : cardsOnBoard)
+	{
+		c.resetAttacked();
+	}
 }
 
 void drawRoundNumber()
@@ -398,7 +431,7 @@ void drawPlayerHealth()
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
-	SDL_Color fontColor = {255, 255, 255};
+	SDL_Color fontColor = {255, 0, 0};
 
 	TTF_Font* playerHealthFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
 	sprintf(playerHealthBuffer, "%d", playerHealth);
@@ -420,8 +453,7 @@ void drawPlayerMana()
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
-	SDL_Color fontColor = {255, 255, 255};
-
+	SDL_Color fontColor = {0, 0, 255};
 
 	TTF_Font* playerManaFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
 	sprintf(playerManaBuffer, "%d", playerMana);

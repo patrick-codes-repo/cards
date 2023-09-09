@@ -7,24 +7,8 @@ using namespace std;
 Opponent::Opponent(SDL_Renderer* p_renderer, short p_health)
 	:health(p_health), renderer(p_renderer)
 {	
-	if(TTF_Init() < 0)
-		cout << "tff_init error: " << SDL_GetError() << endl;
-
-	SDL_Color fontColor = { 255, 255, 255 };
-
-	TTF_Font* opponentHealthFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
-	sprintf(healthBuffer, "%d", health);
-	SDL_Surface* opponentHealthSurface = TTF_RenderText_Blended_Wrapped(opponentHealthFont, healthBuffer, fontColor, 0);
-	opponentHealthTexture = SDL_CreateTextureFromSurface(renderer, opponentHealthSurface);
-	healthTextDest.x = SCREEN_WIDTH/3 - opponentHealthSurface->w/2;
-	healthTextDest.y = SCREEN_HEIGHT/5 - opponentHealthSurface->h/2;
-	healthTextDest.w = opponentHealthSurface->w;
-	healthTextDest.h = opponentHealthSurface->h;
-	SDL_RenderCopy(p_renderer, opponentHealthTexture, NULL, &healthTextDest);
-	TTF_CloseFont(opponentHealthFont);
-	SDL_FreeSurface(opponentHealthSurface);
-
 	drawMana();
+	drawHealth();
 
 	TTF_Quit();
 }
@@ -39,10 +23,12 @@ void Opponent::renderMana()
 	SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest);
 }
 
-void Opponent::damaged()
+void Opponent::damaged(short damageTaken)
 {
 	//change health value
+	health -= damageTaken;
 	//redraw health on screen
+	drawHealth();
 }
 
 void Opponent::healed()
@@ -97,12 +83,33 @@ void Opponent::setMana(short &newManaAmount)
 	mana = newManaAmount;
 }
 
+void Opponent::drawHealth()
+{
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	SDL_Color fontColor = { 255, 0, 0 };
+	TTF_Font* opponentHealthFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
+	sprintf(healthBuffer, "%d", health);
+	SDL_Surface* opponentHealthSurface = TTF_RenderText_Blended_Wrapped(opponentHealthFont, healthBuffer, fontColor, 0);
+	opponentHealthTexture = SDL_CreateTextureFromSurface(renderer, opponentHealthSurface);
+	healthTextDest.x = SCREEN_WIDTH/3 - opponentHealthSurface->w/2;
+	healthTextDest.y = SCREEN_HEIGHT/5 - opponentHealthSurface->h/2;
+	healthTextDest.w = opponentHealthSurface->w;
+	healthTextDest.h = opponentHealthSurface->h;
+	SDL_RenderCopy(renderer, opponentHealthTexture, NULL, &healthTextDest);
+	TTF_CloseFont(opponentHealthFont);
+	SDL_FreeSurface(opponentHealthSurface);
+
+	TTF_Quit();
+}
+
 void Opponent::drawMana()
 {
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
-	SDL_Color fontColor = { 255, 255, 255 };
+	SDL_Color fontColor = { 0, 0, 255 };
 	TTF_Font* manaFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
 	sprintf(manaBuffer, "%d", mana);
 	SDL_Surface* manaSurface = TTF_RenderText_Blended_Wrapped(manaFont, manaBuffer, fontColor, 0);

@@ -23,6 +23,11 @@ class Card {
 		void attack();
 		short getCost();
 		type getCardType();
+		short getDamage();
+		void resetAttacked();
+		bool getAttacked();
+		void setAttacking();
+		bool getAttacking();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -43,4 +48,6 @@ class Card {
 		void moveCardToSide();
 		int cardPosition;
 		type cardType;
+		bool attacked = false;
+		bool attacking = false;
 };
