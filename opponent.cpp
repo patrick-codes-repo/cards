@@ -25,9 +25,7 @@ void Opponent::renderMana()
 
 void Opponent::damaged(short damageTaken)
 {
-	//change health value
 	health -= damageTaken;
-	//redraw health on screen
 	drawHealth();
 }
 
@@ -133,4 +131,9 @@ short Opponent::getSelectedCardIndex()
 			return i;
 	}
 	return -1;
+}
+
+OpponentCard Opponent::getCard(short &cardIndex)
+{
+	return cardsOnBoard.at(cardIndex);
 }

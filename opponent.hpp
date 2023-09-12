@@ -19,6 +19,7 @@ class Opponent {
 		void drawMana();
 		void drawHealth();
 		short getSelectedCardIndex();
+		OpponentCard getCard(short &cardIndex);
 	private:
 		SDL_Renderer* renderer;
 		SDL_Texture* opponentHealthTexture; 

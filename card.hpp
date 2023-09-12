@@ -28,6 +28,8 @@ class Card {
 		bool getAttacked();
 		void setAttacking();
 		bool getAttacking();
+		void setTarget(short &targetIndex);
+		short getTarget();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -50,4 +52,5 @@ class Card {
 		type cardType;
 		bool attacked = false;
 		bool attacking = false;
+		short attackTarget;
 };

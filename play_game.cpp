@@ -273,7 +273,20 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 	{
 		if(!playerAttacking)
 			playerAttacking = true;
+	
+		short temp = opponent->getSelectedCardIndex();
 
+		if(opponent->getSelectedCardIndex() > -1)
+		{
+			cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl;
+			selectedCard.setTarget(temp);
+			selectedCard.setAttacking();
+			return;
+		}
+
+		temp = 10;
+
+		selectedCard.setTarget(temp);
 		selectedCard.setAttacking();
 		return;
 	}
@@ -285,14 +298,21 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 
 void attack(Card &selectedCard)
 {
-	if(opponent->getSelectedCardIndex() > -1)
-	{
-		//needs to call attack somehow so attacked is set to true in the card
-		cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl;
-		return;
-	}
+	/* if(opponent->getSelectedCardIndex() > -1) */
+	/* { */
+	/* 	//needs to call attack somehow so attacked is set to true in the card */
+	/* 	cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl; */
+	/* 	return; */
+	/* } */
+	short temp = selectedCard.getTarget();
+	if(selectedCard.getTarget() == 10)
+		opponent->damaged(selectedCard.getDamage());
+	else 
+		opponent->getCard(temp).damaged(renderer, selectedCard.getDamage());
+
+	cout << "Opponent card " << selectedCard.getTarget() << " attacked" << endl;
+
 	selectedCard.attack();
-	opponent->damaged(selectedCard.getDamage());
 }
 
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
