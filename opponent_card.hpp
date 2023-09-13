@@ -31,8 +31,9 @@ class OpponentCard {
 		short cost;
 		char healthBuffer[50];
 		char attackBuffer[50];
-		void changeHealthDisplayed(SDL_Renderer* p_renderer);
+		/* void changeHealthDisplayed(SDL_Renderer* p_renderer); */
 		bool isSelected = false;
 		void createCardTexture(SDL_Renderer* p_renderer);
 		bool hasBeenPlayed = false;
+		void drawDynamicStats(SDL_Renderer* p_renderer);
 };

@@ -133,7 +133,7 @@ short Opponent::getSelectedCardIndex()
 	return -1;
 }
 
-OpponentCard Opponent::getCard(short &cardIndex)
+void Opponent::damageCard(short &cardIndex, short p_damageTaken)
 {
-	return cardsOnBoard.at(cardIndex);
+	cardsOnBoard.at(cardIndex).damaged(renderer, p_damageTaken);	
 }

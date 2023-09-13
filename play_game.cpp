@@ -179,8 +179,8 @@ int playGame()
 							else
 							{
 								playerSkipped = true;
-								endTurn();
 							}
+							endTurn();
 						}
 
 						if(selectedIndex > -1 && selectedIndex < 10)
@@ -278,7 +278,6 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 
 		if(opponent->getSelectedCardIndex() > -1)
 		{
-			cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl;
 			selectedCard.setTarget(temp);
 			selectedCard.setAttacking();
 			return;
@@ -292,25 +291,15 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 	}
 
 	selectedCard.resetCardPosition();
-
-	/* (selectedCard.getCardY() < 400 && (selectedCard.getCardState() == onBoard)) ? selectedCard.setAttacking() : selectedCard.resetCardPosition(); */
 }
 
 void attack(Card &selectedCard)
 {
-	/* if(opponent->getSelectedCardIndex() > -1) */
-	/* { */
-	/* 	//needs to call attack somehow so attacked is set to true in the card */
-	/* 	cout << "attacking opponent card " << opponent->getSelectedCardIndex() << endl; */
-	/* 	return; */
-	/* } */
 	short temp = selectedCard.getTarget();
 	if(selectedCard.getTarget() == 10)
 		opponent->damaged(selectedCard.getDamage());
 	else 
-		opponent->getCard(temp).damaged(renderer, selectedCard.getDamage());
-
-	cout << "Opponent card " << selectedCard.getTarget() << " attacked" << endl;
+		opponent->damageCard(temp, selectedCard.getDamage());
 
 	selectedCard.attack();
 }
@@ -326,10 +315,8 @@ void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p
 
 void playSpell(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard)
 {
-	/* p_currentCard.playCard(p_positionToReplace); */
 	playerMana -= p_currentCard.getCost();
 	drawPlayerMana();
-	/* p_cardsOnBoard[p_positionToReplace] = p_currentCard; */
 	p_dummyCard.setIsVisible();
 }	
 
@@ -377,7 +364,6 @@ void renderPlayerHand(Card p_currentHandCards[], DummyCard p_currentHandFillers[
 	{
 		if(i != p_selectedIndex)
 			(!p_currentHandFillers[i].getIsVisible()) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer);
-			/* (p_currentHandCards[i].getCardState() != onBoard) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer); */
 	}
 }
 
