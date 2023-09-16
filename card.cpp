@@ -51,55 +51,9 @@ Card::Card(SDL_Renderer* p_renderer, short p_cost, short p_arrayPosition, short 
 	SDL_FreeSurface(cardDescriptionSurface);
 	SDL_DestroyTexture(cardDescriptionTexture);
 
-	/* TTF_Quit(); */
-
-	/* drawDynamicStats(p_renderer); */
-
-	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
-		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
-
-	SDL_RenderCopy(p_renderer, noNumbers, NULL, NULL);
-
-	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
-
-	sprintf(healthBuffer, "%d", health);
-	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0);
-	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface);
-	healthTextDest.x = BACKGROUND_ORIGIN_WIDTH - 200;
-	healthTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
-	healthTextDest.w = healthSurface->w;
-	healthTextDest.h = healthSurface->h;
-	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest);
-	SDL_FreeSurface(healthSurface);
-	SDL_DestroyTexture(healthTexture);
-	
-	sprintf(damageBuffer, "%d", damage);
-	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, damageBuffer, fontColor, 0);
-	SDL_Texture* damageTexture = SDL_CreateTextureFromSurface(p_renderer, damageSurface);
-	damageTextDest.x = 100;
-	damageTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
-	damageTextDest.w = damageSurface->w;
-	damageTextDest.h = damageSurface->h;
-	SDL_RenderCopy(p_renderer,damageTexture, NULL, &damageTextDest);
-	SDL_FreeSurface(damageSurface);
-	SDL_DestroyTexture(damageTexture);
-
-	sprintf(costBuffer, "%d", cost);
-	SDL_Surface* costSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, costBuffer, fontColor, 0);
-	costTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - costSurface->w/2;
-	costTextDest.y = 0;
-	costTextDest.w = costSurface->w;
-	costTextDest.h = costSurface->h;
-	SDL_Texture* costTexture = SDL_CreateTextureFromSurface(p_renderer, costSurface);
-	SDL_RenderCopy(p_renderer, costTexture, NULL, &costTextDest);
-	SDL_FreeSurface(costSurface);
-	SDL_DestroyTexture(costTexture);
-
-	TTF_CloseFont(cardStatsFont);
 	TTF_Quit();
 
-	if(SDL_SetRenderTarget(p_renderer, NULL) < 0)
-		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
+	drawDynamicStats(p_renderer);
 }
 
 void Card::update(Mouse p_mouse)
@@ -138,32 +92,6 @@ void Card::render(SDL_Renderer* p_renderer)
 	SDL_RenderCopy(p_renderer, targetTexture, NULL, &targetDest);
 }
 
-/* void Card::drawHealth(SDL_Renderer* p_renderer) */
-/* { */
-/* 	/1* SDL_DestroyTexture(targetTexture); *1/ */
-/* 	/1* targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT); *1/ */
-
-/* 	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0) */
-/* 		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl; */
-
-/* 	SDL_RenderCopy(p_renderer, noNumbers, NULL, NULL); */
-
-/* 	SDL_Color fontColor = { 255, 255, 255 }; */
-/* 	TTF_Init(); */
-/* 	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200); */
-/* 	sprintf(healthBuffer, "%d", health); */
-/* 	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0); */
-/* 	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface); */
-/* 	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest); */
-/* 	TTF_CloseFont(cardStatsFont); */
-/* 	SDL_FreeSurface(healthSurface); */
-/* 	/1* SDL_DestroyTexture(healthTexture); *1/ */
-/* 	TTF_Quit(); */
-
-/* 	if(SDL_SetRenderTarget(p_renderer, NULL) < 0) */
-/* 		cout << "Changing render target to default failed: " << SDL_GetError() << endl; */
-/* } */
-
 void Card::drawDynamicStats(SDL_Renderer* p_renderer)
 {
 	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
@@ -174,9 +102,10 @@ void Card::drawDynamicStats(SDL_Renderer* p_renderer)
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
-	SDL_Color fontColor = { 255, 255, 255 };
+	SDL_Color fontColor = { 255, 0, 0 };
 
 	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
+
 	sprintf(healthBuffer, "%d", health);
 	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0);
 	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface);
@@ -186,7 +115,9 @@ void Card::drawDynamicStats(SDL_Renderer* p_renderer)
 	healthTextDest.h = healthSurface->h;
 	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest);
 	SDL_FreeSurface(healthSurface);
-	SDL_DestroyTexture(healthTexture);
+	/* SDL_DestroyTexture(healthTexture); */
+	
+	fontColor = { 255, 255, 255 };
 	
 	sprintf(damageBuffer, "%d", damage);
 	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, damageBuffer, fontColor, 0);
@@ -196,10 +127,21 @@ void Card::drawDynamicStats(SDL_Renderer* p_renderer)
 	damageTextDest.w = damageSurface->w;
 	damageTextDest.h = damageSurface->h;
 	SDL_RenderCopy(p_renderer, damageTexture, NULL, &damageTextDest);
-	TTF_CloseFont(cardStatsFont);
 	SDL_FreeSurface(damageSurface);
 	/* SDL_DestroyTexture(damageTexture); */
+	
+	sprintf(costBuffer, "%d", cost);
+	SDL_Surface* costSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, costBuffer, fontColor, 0);
+	SDL_Texture* costTexture = SDL_CreateTextureFromSurface(p_renderer, costSurface);
+	costTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - costSurface->w/2;
+	costTextDest.y = 0;
+	costTextDest.w = costSurface->w;
+	costTextDest.h = costSurface->h;
+	SDL_RenderCopy(p_renderer, costTexture, NULL, &costTextDest);
+	SDL_FreeSurface(costSurface);
+	/* SDL_DestroyTexture(costTexture); */
 
+	TTF_CloseFont(cardStatsFont);
 	TTF_Quit();
 
 	if(SDL_SetRenderTarget(p_renderer, NULL) < 0)

@@ -67,7 +67,7 @@ void OpponentCard::drawDynamicStats(SDL_Renderer* p_renderer)
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
-	SDL_Color fontColor = { 255, 255, 255 };
+	SDL_Color fontColor = { 255, 0, 0 };
 
 	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
 	sprintf(healthBuffer, "%d", health);
@@ -81,6 +81,7 @@ void OpponentCard::drawDynamicStats(SDL_Renderer* p_renderer)
 	SDL_FreeSurface(healthSurface);
 	SDL_DestroyTexture(healthTexture);
 	
+	fontColor = { 255, 255, 255 };
 	sprintf(attackBuffer, "%d", attack);
 	SDL_Surface* attackSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, attackBuffer, fontColor, 0);
 	SDL_Texture* attackTexture = SDL_CreateTextureFromSurface(p_renderer, attackSurface);
@@ -147,5 +148,5 @@ short OpponentCard::getCost()
 
 short OpponentCard::getDamage()
 {
-	return 1;
+	return attack;
 }
