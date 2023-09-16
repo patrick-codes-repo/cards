@@ -20,6 +20,7 @@ class Opponent {
 		void drawHealth();
 		short getSelectedCardIndex();
 		void damageCard(short &cardIndex, short p_damageTaken);
+		short getCardDamage(short &cardIndex);
 	private:
 		SDL_Renderer* renderer;
 		SDL_Texture* opponentHealthTexture; 
@@ -29,10 +30,10 @@ class Opponent {
 		short health;
 		char healthBuffer[50];
 		OpponentCard deck[4] = {
-			OpponentCard(renderer, 0, 1, 0, 1), 
-			OpponentCard(renderer, 1, 0, 0, 2), 
-			OpponentCard(renderer, 2, 2, 2, 3), 
-			OpponentCard(renderer, 3, 0, 0, 4)
+			OpponentCard(renderer, 0, 1, 1, 1), 
+			OpponentCard(renderer, 1, 2, 2, 2), 
+			OpponentCard(renderer, 2, 3, 3, 3), 
+			OpponentCard(renderer, 3, 4, 4, 4)
 		};
 		vector<OpponentCard> cardsOnBoard;
 		short chooseCard();

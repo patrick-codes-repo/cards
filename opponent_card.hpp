@@ -19,6 +19,7 @@ class OpponentCard {
 		bool getIsSelected();
 		bool getHasBeenPlayed();
 		short getCost();
+		short getDamage();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;

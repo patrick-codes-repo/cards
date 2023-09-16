@@ -137,3 +137,8 @@ void Opponent::damageCard(short &cardIndex, short p_damageTaken)
 {
 	cardsOnBoard.at(cardIndex).damaged(renderer, p_damageTaken);	
 }
+
+short Opponent::getCardDamage(short &cardIndex)
+{
+	return cardsOnBoard.at(cardIndex).getDamage();
+}

@@ -51,6 +51,10 @@ Card::Card(SDL_Renderer* p_renderer, short p_cost, short p_arrayPosition, short 
 	SDL_FreeSurface(cardDescriptionSurface);
 	SDL_DestroyTexture(cardDescriptionTexture);
 
+	/* TTF_Quit(); */
+
+	/* drawDynamicStats(p_renderer); */
+
 	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
 		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
 
@@ -134,35 +138,10 @@ void Card::render(SDL_Renderer* p_renderer)
 	SDL_RenderCopy(p_renderer, targetTexture, NULL, &targetDest);
 }
 
-void Card::changeHealthDisplayed(SDL_Renderer* p_renderer)
-{
-	SDL_DestroyTexture(targetTexture);
-	targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
-
-	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
-		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
-
-	SDL_RenderCopy(p_renderer, noNumbers, NULL, NULL);
-
-	SDL_Color fontColor = { 255, 255, 255 };
-	TTF_Init();
-	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
-	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0);
-	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface);
-	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest);
-	TTF_CloseFont(cardStatsFont);
-	SDL_FreeSurface(healthSurface);
-	SDL_DestroyTexture(healthTexture);
-	TTF_Quit();
-
-	if(SDL_SetRenderTarget(p_renderer, NULL) < 0)
-		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
-}
-
-/* void Card::changeCostDisplayed(SDL_Renderer* p_renderer) */
+/* void Card::drawHealth(SDL_Renderer* p_renderer) */
 /* { */
-/* 	SDL_DestroyTexture(targetTexture); */
-/* 	targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT); */
+/* 	/1* SDL_DestroyTexture(targetTexture); *1/ */
+/* 	/1* targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT); *1/ */
 
 /* 	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0) */
 /* 		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl; */
@@ -172,24 +151,65 @@ void Card::changeHealthDisplayed(SDL_Renderer* p_renderer)
 /* 	SDL_Color fontColor = { 255, 255, 255 }; */
 /* 	TTF_Init(); */
 /* 	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200); */
-/* 	SDL_Surface* costSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, costBuffer, fontColor, 0); */
-/* 	SDL_Texture* costTexture = SDL_CreateTextureFromSurface(p_renderer, costSurface); */
-/* 	SDL_RenderCopy(p_renderer, costTexture, NULL, &costTextDest); */
+/* 	sprintf(healthBuffer, "%d", health); */
+/* 	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0); */
+/* 	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface); */
+/* 	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest); */
 /* 	TTF_CloseFont(cardStatsFont); */
-/* 	SDL_FreeSurface(costSurface); */
-/* 	SDL_DestroyTexture(costTexture); */
+/* 	SDL_FreeSurface(healthSurface); */
+/* 	/1* SDL_DestroyTexture(healthTexture); *1/ */
 /* 	TTF_Quit(); */
 
 /* 	if(SDL_SetRenderTarget(p_renderer, NULL) < 0) */
 /* 		cout << "Changing render target to default failed: " << SDL_GetError() << endl; */
 /* } */
 
+void Card::drawDynamicStats(SDL_Renderer* p_renderer)
+{
+	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
+		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
+
+	SDL_RenderCopy(p_renderer, noNumbers, NULL, NULL);
+
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	SDL_Color fontColor = { 255, 255, 255 };
+
+	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
+	sprintf(healthBuffer, "%d", health);
+	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0);
+	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface);
+	healthTextDest.x = BACKGROUND_ORIGIN_WIDTH - 200;
+	healthTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
+	healthTextDest.w = healthSurface->w;
+	healthTextDest.h = healthSurface->h;
+	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest);
+	SDL_FreeSurface(healthSurface);
+	SDL_DestroyTexture(healthTexture);
+	
+	sprintf(damageBuffer, "%d", damage);
+	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, damageBuffer, fontColor, 0);
+	SDL_Texture* damageTexture = SDL_CreateTextureFromSurface(p_renderer, damageSurface);
+	damageTextDest.x = 100;
+	damageTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
+	damageTextDest.w = damageSurface->w;
+	damageTextDest.h = damageSurface->h;
+	SDL_RenderCopy(p_renderer, damageTexture, NULL, &damageTextDest);
+	TTF_CloseFont(cardStatsFont);
+	SDL_FreeSurface(damageSurface);
+	/* SDL_DestroyTexture(damageTexture); */
+
+	TTF_Quit();
+
+	if(SDL_SetRenderTarget(p_renderer, NULL) < 0)
+		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
+}
+
 void Card::damaged(SDL_Renderer* p_renderer, short p_damageTaken)
 {
-	memset(healthBuffer, 0, sizeof healthBuffer);
-	sprintf(healthBuffer, "%d", int(health - p_damageTaken));
 	health -= p_damageTaken;
-	changeHealthDisplayed(p_renderer);
+	drawDynamicStats(p_renderer);
 }
 
 bool Card::getIsSelected()

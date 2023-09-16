@@ -299,7 +299,10 @@ void attack(Card &selectedCard)
 	if(selectedCard.getTarget() == 10)
 		opponent->damaged(selectedCard.getDamage());
 	else 
+	{
 		opponent->damageCard(temp, selectedCard.getDamage());
+		selectedCard.damaged(renderer, opponent->getCardDamage(temp));
+	}
 
 	selectedCard.attack();
 }

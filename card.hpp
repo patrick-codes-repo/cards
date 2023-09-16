@@ -46,7 +46,7 @@ class Card {
 		short ARRAY_POSITION;
 		state cardState = inHand;
 		bool isSelected = false;
-		void changeHealthDisplayed(SDL_Renderer* p_renderer);
+		void drawDynamicStats(SDL_Renderer* p_renderer);
 		void moveCardToSide();
 		int cardPosition;
 		type cardType;
