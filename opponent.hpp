@@ -39,4 +39,6 @@ class Opponent {
 		short chooseCard();
 		short mana = 1;
 		char manaBuffer[10];
+		void killCard(short &cardIndex);
+		void refreshCardPositions();
 };

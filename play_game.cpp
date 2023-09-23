@@ -300,8 +300,8 @@ void attack(Card &selectedCard)
 		opponent->damaged(selectedCard.getDamage());
 	else 
 	{
-		opponent->damageCard(temp, selectedCard.getDamage());
 		selectedCard.damaged(renderer, opponent->getCardDamage(temp));
+		opponent->damageCard(temp, selectedCard.getDamage());
 	}
 
 	selectedCard.attack();

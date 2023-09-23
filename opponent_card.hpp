@@ -11,7 +11,7 @@ class OpponentCard {
 	public:
 		OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_attack, short p_cost);
 		void render(SDL_Renderer* p_renderer);
-		void damaged(SDL_Renderer* p_renderer, short p_damageTaken);
+		short damaged(SDL_Renderer* p_renderer, short p_damageTaken);
 		void update(Mouse p_mouse);
 		void moveCard(Mouse p_mouse);
 		int getCardY();
@@ -20,13 +20,14 @@ class OpponentCard {
 		bool getHasBeenPlayed();
 		short getCost();
 		short getDamage();
+		void changeBoardPosition(short p_position);
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
 		SDL_Rect targetDest;
 		SDL_Rect healthTextDest;
 		SDL_Rect attackTextDest;
-		short ARRAY_POSITION;
+		short boardPosition;
 		short health;
 		short attack;
 		short cost;

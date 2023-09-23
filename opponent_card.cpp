@@ -5,7 +5,7 @@
 using namespace std;
 
 OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_attack, short p_cost)
-	:ARRAY_POSITION(p_arrayPosition), health(p_health), attack(p_attack), cost(p_cost)
+	:health(p_health), attack(p_attack), cost(p_cost)
 {
 }
 
@@ -14,7 +14,7 @@ void OpponentCard::createCardTexture(SDL_Renderer* p_renderer)
 	targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
 	noNumbers = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
 
-	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * ARRAY_POSITION);
+	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * boardPosition);
 	targetDest.y = (SCREEN_HEIGHT/3) - ADJUSTED_BACKGROUND_HEIGHT/2;
 	targetDest.w = ADJUSTED_BACKGROUND_WIDTH;
 	targetDest.h = ADJUSTED_BACKGROUND_HEIGHT;
@@ -121,6 +121,7 @@ void OpponentCard::render(SDL_Renderer* p_renderer)
 
 void OpponentCard::playCard(int p_numberOfCardsOnBoard, SDL_Renderer* p_renderer)
 {
+	boardPosition = p_numberOfCardsOnBoard;
 	createCardTexture(p_renderer);
 	hasBeenPlayed = true;
 }
@@ -130,10 +131,11 @@ bool OpponentCard::getHasBeenPlayed()
 	return hasBeenPlayed;
 }
 
-void OpponentCard::damaged(SDL_Renderer* p_renderer, short p_damageTaken)
+short OpponentCard::damaged(SDL_Renderer* p_renderer, short p_damageTaken)
 {
 	health -= p_damageTaken;
 	drawDynamicStats(p_renderer);
+	return health;
 }
 
 bool OpponentCard::getIsSelected()
@@ -149,4 +151,10 @@ short OpponentCard::getCost()
 short OpponentCard::getDamage()
 {
 	return attack;
+}
+
+void OpponentCard::changeBoardPosition(short p_position)
+{
+	boardPosition = p_position;
+	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * boardPosition);
 }

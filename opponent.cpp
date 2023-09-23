@@ -135,7 +135,27 @@ short Opponent::getSelectedCardIndex()
 
 void Opponent::damageCard(short &cardIndex, short p_damageTaken)
 {
-	cardsOnBoard.at(cardIndex).damaged(renderer, p_damageTaken);	
+	short cardsRemainingHealth = cardsOnBoard.at(cardIndex).damaged(renderer, p_damageTaken);	
+
+	if(cardsRemainingHealth > 0)
+		return;
+
+	if(cardsRemainingHealth/4 < 0)
+		damaged(cardsRemainingHealth/4 * -1);
+
+	killCard(cardIndex);
+}
+
+void Opponent::killCard(short &cardIndex)
+{
+	cardsOnBoard.erase(cardsOnBoard.begin() + cardIndex);
+	refreshCardPositions();
+}
+
+void Opponent::refreshCardPositions()
+{
+	for(int i = 0; i < cardsOnBoard.size(); i++)
+		cardsOnBoard.at(i).changeBoardPosition(i);
 }
 
 short Opponent::getCardDamage(short &cardIndex)
