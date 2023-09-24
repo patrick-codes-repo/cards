@@ -172,7 +172,7 @@ int playGame()
 								for(Card& c : cardsOnBoard)
 								{
 									if(c.getAttacking())
-										attack(c);
+										attack(c, cardsOnBoard);
 								}
 								playerAttacking = false;
 							}
@@ -293,15 +293,38 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 	selectedCard.resetCardPosition();
 }
 
-void attack(Card &selectedCard)
+void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
 {
-	short temp = selectedCard.getTarget();
+	short selectedCardTarget = selectedCard.getTarget();
+	short tempCardTarget;
+	short TEN = 10;
+
 	if(selectedCard.getTarget() == 10)
 		opponent->damaged(selectedCard.getDamage());
 	else 
 	{
-		selectedCard.damaged(renderer, opponent->getCardDamage(temp));
-		opponent->damageCard(temp, selectedCard.getDamage());
+		selectedCard.damaged(renderer, opponent->getCardDamage(selectedCardTarget));
+		opponent->damageCard(selectedCardTarget, selectedCard.getDamage());
+
+		if(opponent->getCardDied())
+		{
+			for(int i = 0; i < cardsOnBoard.size(); i++)
+			{
+				tempCardTarget = cardsOnBoard.at(i).getTarget();
+
+				if(tempCardTarget == selectedCardTarget)
+				{
+					cardsOnBoard.at(i).setTarget(TEN);
+				}
+				if(tempCardTarget > selectedCardTarget && tempCardTarget != 10)
+				{
+					tempCardTarget--;
+					cardsOnBoard.at(i).setTarget(tempCardTarget);
+				}
+			}
+
+			opponent->resetCardDied();
+		}
 	}
 
 	selectedCard.attack();

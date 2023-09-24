@@ -55,4 +55,4 @@ void renderSelectedCard(int &p_selectedIndex, vector<Card> p_cardsOnBoard, Card 
 void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking);
 void cardOnSideHandler(short &cardOnSideIndex, vector<Card> &cardsOnBoard, Card currentHand[], DummyCard p_currentHandFillers[]);
 void endTurn();
-void attack(Card &selectedCard);
+void attack(Card &selectedCard, vector<Card> &cardsOnBoard);

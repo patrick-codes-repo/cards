@@ -21,6 +21,8 @@ class Opponent {
 		short getSelectedCardIndex();
 		void damageCard(short &cardIndex, short p_damageTaken);
 		short getCardDamage(short &cardIndex);
+		void resetCardDied();
+		bool getCardDied();
 	private:
 		SDL_Renderer* renderer;
 		SDL_Texture* opponentHealthTexture; 
@@ -41,4 +43,5 @@ class Opponent {
 		char manaBuffer[10];
 		void killCard(short &cardIndex);
 		void refreshCardPositions();
+		bool cardDied = false;
 };

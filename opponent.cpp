@@ -150,6 +150,17 @@ void Opponent::killCard(short &cardIndex)
 {
 	cardsOnBoard.erase(cardsOnBoard.begin() + cardIndex);
 	refreshCardPositions();
+	cardDied = true;
+}
+
+bool Opponent::getCardDied()
+{
+	return cardDied;
+}
+
+void Opponent::resetCardDied()
+{
+	cardDied = false;
 }
 
 void Opponent::refreshCardPositions()
