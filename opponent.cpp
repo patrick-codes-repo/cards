@@ -51,6 +51,23 @@ void Opponent::renderCards()
 		}
 }
 
+bool Opponent::makeMove()
+{
+	bool cardPlayed = playCard();
+
+	if(cardPlayed)
+		return true;
+
+	if(cardsOnBoard.size() > 0 && !attacking)
+	{
+		cardsOnBoard.at(0).attack();
+		attacking = true;
+		return true;
+	}
+
+	attacking = false;
+	return false;
+}
 bool Opponent::playCard()
 {
 	short cardToPlay = chooseCard();

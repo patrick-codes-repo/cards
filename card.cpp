@@ -213,7 +213,7 @@ void Card::setStateInHand()
 {
 	attacked = true;
 	attacking = false;
-	attackTarget= -1;
+	attackTarget = -1;
 }
 
 short Card::getCost()

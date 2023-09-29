@@ -103,7 +103,7 @@ int playGame()
 
 		if(!playersTurn)
 		{
-			if(opponent->playCard())
+			if(opponent->makeMove())
 			{
 				playerSkipped = false;
 				opponentSkipped = false;
@@ -152,7 +152,7 @@ int playGame()
 						{
 							cout << "test button clicked" << endl;
 							/* test.damaged(renderer, 2); */
-							opponent->playCard();
+							/* opponent->playCard(); */
 						}
 
 						if (scrollDeckup.getIsSelected() && !cardOnside && selectedIndex < 0)
@@ -316,7 +316,7 @@ void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
 				{
 					cardsOnBoard.at(i).setTarget(TEN);
 				}
-				if(tempCardTarget > selectedCardTarget && tempCardTarget != 10)
+				if(tempCardTarget > selectedCardTarget && tempCardTarget != 10 && cardsOnBoard.at(i).getAttacking())
 				{
 					tempCardTarget--;
 					cardsOnBoard.at(i).setTarget(tempCardTarget);

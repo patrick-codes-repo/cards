@@ -10,7 +10,7 @@ class Opponent {
 		Opponent(SDL_Renderer* p_renderer, short p_health);
 		void damaged(short damageTaken);
 		void healed();
-		bool playCard();
+		bool makeMove();
 		void renderHealth();
 		void renderMana();
 		void renderCards();
@@ -44,4 +44,6 @@ class Opponent {
 		void killCard(short &cardIndex);
 		void refreshCardPositions();
 		bool cardDied = false;
+		bool playCard();
+		bool attacking = false;
 };

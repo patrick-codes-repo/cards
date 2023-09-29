@@ -4,8 +4,8 @@
 
 using namespace std;
 
-OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_attack, short p_cost)
-	:health(p_health), attack(p_attack), cost(p_cost)
+OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_damage, short p_cost)
+	:health(p_health), damage(p_damage), cost(p_cost)
 {
 }
 
@@ -82,17 +82,17 @@ void OpponentCard::drawDynamicStats(SDL_Renderer* p_renderer)
 	SDL_DestroyTexture(healthTexture);
 	
 	fontColor = { 255, 255, 255 };
-	sprintf(attackBuffer, "%d", attack);
-	SDL_Surface* attackSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, attackBuffer, fontColor, 0);
-	SDL_Texture* attackTexture = SDL_CreateTextureFromSurface(p_renderer, attackSurface);
-	attackTextDest.x = 100;
-	attackTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
-	attackTextDest.w = attackSurface->w;
-	attackTextDest.h = attackSurface->h;
-	SDL_RenderCopy(p_renderer, attackTexture, NULL, &attackTextDest);
+	sprintf(damageBuffer, "%d", damage);
+	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, damageBuffer, fontColor, 0);
+	SDL_Texture* damageTexture = SDL_CreateTextureFromSurface(p_renderer, damageSurface);
+	damageTextDest.x = 100;
+	damageTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
+	damageTextDest.w = damageSurface->w;
+	damageTextDest.h = damageSurface->h;
+	SDL_RenderCopy(p_renderer, damageTexture, NULL, &damageTextDest);
 	TTF_CloseFont(cardStatsFont);
-	SDL_FreeSurface(attackSurface);
-	/* SDL_DestroyTexture(attackTexture); */
+	SDL_FreeSurface(damageSurface);
+	/* SDL_DestroyTexture(damageTexture); */
 
 	TTF_Quit();
 
@@ -150,11 +150,16 @@ short OpponentCard::getCost()
 
 short OpponentCard::getDamage()
 {
-	return attack;
+	return damage;
 }
 
 void OpponentCard::changeBoardPosition(short p_position)
 {
 	boardPosition = p_position;
 	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * boardPosition);
+}
+
+void OpponentCard::attack()
+{
+	cout << "Opponent card " << boardPosition << " is attacking" << endl;
 }
