@@ -110,7 +110,7 @@ int playGame()
 			}
 			else
 				opponentSkipped = true;
-			/* endRound(); */
+
 			endTurn();
 		}	
 
@@ -327,7 +327,25 @@ void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
 		}
 	}
 
+	if(selectedCard.getHealth() <= 0)
+	{
+		killCard(selectedCard, cardsOnBoard);
+		return;
+	}
+
 	selectedCard.attack();
+}
+
+void killCard(Card &selectedCard, vector<Card> &cardsOnBoard)
+{
+	cardsOnBoard.erase(cardsOnBoard.begin() + selectedCard.getCardPosition());
+	refreshCardPositions(cardsOnBoard);
+}
+
+void refreshCardPositions(vector<Card> &cardsOnBoard)
+{
+	for(int i = 0; i < cardsOnBoard.size(); i++)
+		cardsOnBoard.at(i).changeBoardPosition(i);
 }
 
 void replaceCard(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dummyCard, int p_positionToReplace)
@@ -345,7 +363,6 @@ void playSpell(Card &p_currentCard, vector<Card> &p_cardsOnBoard, DummyCard &p_d
 	drawPlayerMana();
 	p_dummyCard.setIsVisible();
 }	
-
 
 void incrementHandDisplayController()
 {

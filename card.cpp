@@ -260,3 +260,19 @@ short Card::getTarget()
 {
 	return attackTarget;
 }
+
+short Card::getHealth()
+{
+	return health;
+}
+
+int Card::getCardPosition()
+{
+	return cardPosition;
+}
+
+void Card::changeBoardPosition(int p_position)
+{
+	cardPosition = p_position;
+	/* targetDest.x = SCREEN_WIDTH/8 + cardPosition * SCREEN_WIDTH/8; */
+}

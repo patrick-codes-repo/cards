@@ -68,6 +68,7 @@ bool Opponent::makeMove()
 	attacking = false;
 	return false;
 }
+
 bool Opponent::playCard()
 {
 	short cardToPlay = chooseCard();

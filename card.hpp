@@ -30,6 +30,9 @@ class Card {
 		bool getAttacking();
 		void setTarget(short &targetIndex);
 		short getTarget();
+		short getHealth();
+		int getCardPosition();
+		void changeBoardPosition(int p_position);
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
