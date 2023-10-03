@@ -172,6 +172,7 @@ int playGame()
 							{
 								for(Card& c : cardsOnBoard)
 								{
+									//getAttacking should be replaced with getCardState == inAttackingGroup
 									if(c.getAttacking())
 									{
 										c.playAttackAnimation();
@@ -209,16 +210,12 @@ int playGame()
 			}
 		}
 
-		if(readyToDamage)
+		for(Card& c : cardsOnBoard)
 		{
-			for(Card& c : cardsOnBoard)
+			if(c.getCardState() == readyToAttack)
 			{
-				if(c.getAttacking())
-				{
-					attack(c, cardsOnBoard);
-				}
+				attack(c, cardsOnBoard);
 			}
-			readyToDamage = false;
 		}
 		
 		window.clear();
@@ -283,7 +280,7 @@ void playCard(Card &selectedCard, vector<Card> &p_cardsOnBoard, DummyCard &p_dum
 
 void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 {
-	if(selectedCard.getAttacked())
+	if(selectedCard.getCardState() == attackedThisTurn)
 		return;
 
 	if(selectedCard.getCardY() < 400 && selectedCard.getCardState() == onBoard)
@@ -293,6 +290,9 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 	
 		short temp = opponent->getSelectedCardIndex();
 
+		//below can be changed to be <= -1 set temp = 10
+		//Then delete the duplicated code
+		//setAttacking should be replaced with setStateinAttackingGroup
 		if(opponent->getSelectedCardIndex() > -1)
 		{
 			selectedCard.setTarget(temp);
@@ -468,7 +468,7 @@ void endRound(vector<Card> &cardsOnBoard)
 
 	for(Card& c : cardsOnBoard)
 	{
-		c.resetAttacked();
+		c.setStateOnBoard();
 	}
 }
 

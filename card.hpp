@@ -24,8 +24,8 @@ class Card {
 		short getCost();
 		type getCardType();
 		short getDamage();
-		void resetAttacked();
-		bool getAttacked();
+		/* void resetAttacked(); */
+		/* bool getAttacked(); */
 		void setAttacking();
 		bool getAttacking();
 		void setTarget(short &targetIndex);
@@ -34,6 +34,7 @@ class Card {
 		int getCardPosition();
 		void changeBoardPosition(int p_position);
 		void playAttackAnimation();
+		void setStateOnBoard();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -54,9 +55,8 @@ class Card {
 		void moveCardToSide();
 		int cardPosition;
 		type cardType;
-		bool attacked = false;
+		/* bool attacked = false; */
 		bool attacking = false;
 		short attackTarget;
 		Uint32 animationEnd;
-		bool playingAttackAnimation = false;
 };

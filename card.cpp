@@ -60,14 +60,14 @@ void Card::update(Mouse p_mouse)
 {
 	isSelected = SDL_HasIntersection(&targetDest, &p_mouse.collisionRect);
 
-	if(playingAttackAnimation)
+	if(cardState == playingAttackAnimation)
 	{
 		if(SDL_GetTicks() < animationEnd)
 		{
 			targetDest.y = SCREEN_HEIGHT/2 - 50;
 			return;
 		}
-		playingAttackAnimation = false;
+		cardState = readyToAttack;
 	}
 
 	if(cardState == onSide)
@@ -176,15 +176,15 @@ int Card::getCardY()
 
 void Card::resetCardPosition()
 {
-	if(cardState == onBoard)
+	if(cardState == inHand)
 	{
-		targetDest.y = SCREEN_HEIGHT/2;
-		targetDest.x = SCREEN_WIDTH/8 + cardPosition * SCREEN_WIDTH/8;
+		targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * ARRAY_POSITION);
+		targetDest.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
 		return;
 	}
 
-	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * ARRAY_POSITION);
-	targetDest.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
+	targetDest.y = SCREEN_HEIGHT/2;
+	targetDest.x = SCREEN_WIDTH/8 + cardPosition * SCREEN_WIDTH/8;
 }
 
 bool Card::playCard(int p_numberOfCardsOnBoard)
@@ -219,9 +219,11 @@ void Card::setStateInHand()
 {
 	cardState = inHand;
 }
- void Card::attack()
+
+void Card::attack()
 {
-	attacked = true;
+	cardState = attackedThisTurn;
+	/* attacked = true; */
 	attacking = false;
 	attackTarget = -1;
 }
@@ -241,15 +243,15 @@ short Card::getDamage()
 	return damage;
 }
 
-bool Card::getAttacked()
-{
-	return attacked;
-}
+/* bool Card::getAttacked() */
+/* { */
+/* 	return attacked; */
+/* } */
 
-void Card::resetAttacked()
-{
-	attacked = false;
-}
+/* void Card::resetAttacked() */
+/* { */
+/* 	attacked = false; */
+/* } */
 
 void Card::setAttacking()
 {
@@ -289,6 +291,11 @@ void Card::changeBoardPosition(int p_position)
 
 void Card::playAttackAnimation()
 {
-	playingAttackAnimation = true;
+	cardState = playingAttackAnimation;
 	animationEnd = SDL_GetTicks() + 750;
+}
+
+void Card::setStateOnBoard()
+{
+	cardState = onBoard;
 }
