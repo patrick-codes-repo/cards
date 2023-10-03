@@ -63,6 +63,7 @@ int playGame()
 	short cardOnSideIndex;
 	int selectedIndex;
 	bool playerAttacking = false;
+	bool readyToDamage = false;
 
 	/* Opponent* opponent;//;(renderer, 50); */
 	opponent = new Opponent(renderer, 50);
@@ -172,9 +173,13 @@ int playGame()
 								for(Card& c : cardsOnBoard)
 								{
 									if(c.getAttacking())
-										attack(c, cardsOnBoard);
+									{
+										c.playAttackAnimation();
+										/* attack(c, cardsOnBoard); */
+									}
 								}
 								playerAttacking = false;
+								readyToDamage = true;
 							}
 							else
 							{
@@ -202,6 +207,18 @@ int playGame()
 					}
 					break;
 			}
+		}
+
+		if(readyToDamage)
+		{
+			for(Card& c : cardsOnBoard)
+			{
+				if(c.getAttacking())
+				{
+					attack(c, cardsOnBoard);
+				}
+			}
+			readyToDamage = false;
 		}
 		
 		window.clear();
@@ -298,6 +315,8 @@ void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
 	short selectedCardTarget = selectedCard.getTarget();
 	short tempCardTarget;
 	short TEN = 10;
+
+	/* selectedCard.playAttackAnimation(mouse); */
 
 	if(selectedCard.getTarget() == 10)
 		opponent->damaged(selectedCard.getDamage());

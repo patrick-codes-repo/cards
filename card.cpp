@@ -60,6 +60,16 @@ void Card::update(Mouse p_mouse)
 {
 	isSelected = SDL_HasIntersection(&targetDest, &p_mouse.collisionRect);
 
+	if(playingAttackAnimation)
+	{
+		if(SDL_GetTicks() < animationEnd)
+		{
+			targetDest.y = SCREEN_HEIGHT/2 - 50;
+			return;
+		}
+		playingAttackAnimation = false;
+	}
+
 	if(cardState == onSide)
 	{
 		/* targetDest.y = SCREEN_HEIGHT/2 - ADJUSTED_BACKGROUND_HEIGHT/2; */
@@ -275,4 +285,10 @@ void Card::changeBoardPosition(int p_position)
 {
 	cardPosition = p_position;
 	/* targetDest.x = SCREEN_WIDTH/8 + cardPosition * SCREEN_WIDTH/8; */
+}
+
+void Card::playAttackAnimation()
+{
+	playingAttackAnimation = true;
+	animationEnd = SDL_GetTicks() + 750;
 }

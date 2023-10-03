@@ -33,6 +33,7 @@ class Card {
 		short getHealth();
 		int getCardPosition();
 		void changeBoardPosition(int p_position);
+		void playAttackAnimation();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -56,4 +57,6 @@ class Card {
 		bool attacked = false;
 		bool attacking = false;
 		short attackTarget;
+		Uint32 animationEnd;
+		bool playingAttackAnimation = false;
 };
