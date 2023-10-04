@@ -67,7 +67,7 @@ void Card::update(Mouse p_mouse)
 			targetDest.y = SCREEN_HEIGHT/2 - 50;
 			return;
 		}
-		cardState = readyToAttack;
+		cardState = readyToDealDamage;
 	}
 
 	if(cardState == onSide)
@@ -220,11 +220,9 @@ void Card::setStateInHand()
 	cardState = inHand;
 }
 
-void Card::attack()
+void Card::dealDamage()
 {
 	cardState = attackedThisTurn;
-	/* attacked = true; */
-	attacking = false;
 	attackTarget = -1;
 }
 
@@ -243,24 +241,9 @@ short Card::getDamage()
 	return damage;
 }
 
-/* bool Card::getAttacked() */
-/* { */
-/* 	return attacked; */
-/* } */
-
-/* void Card::resetAttacked() */
-/* { */
-/* 	attacked = false; */
-/* } */
-
-void Card::setAttacking()
+void Card::setStateInAttackingGroup()
 {
-	attacking = true;
-}
-
-bool Card::getAttacking()
-{
-	return attacking;
+	cardState = inAttackingGroup;
 }
 
 void Card::setTarget(short &targetIndex)

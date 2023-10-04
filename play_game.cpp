@@ -63,7 +63,6 @@ int playGame()
 	short cardOnSideIndex;
 	int selectedIndex;
 	bool playerAttacking = false;
-	bool readyToDamage = false;
 
 	/* Opponent* opponent;//;(renderer, 50); */
 	opponent = new Opponent(renderer, 50);
@@ -172,15 +171,12 @@ int playGame()
 							{
 								for(Card& c : cardsOnBoard)
 								{
-									//getAttacking should be replaced with getCardState == inAttackingGroup
-									if(c.getAttacking())
+									if(c.getCardState() == inAttackingGroup)
 									{
 										c.playAttackAnimation();
-										/* attack(c, cardsOnBoard); */
 									}
 								}
 								playerAttacking = false;
-								readyToDamage = true;
 							}
 							else
 							{
@@ -212,9 +208,9 @@ int playGame()
 
 		for(Card& c : cardsOnBoard)
 		{
-			if(c.getCardState() == readyToAttack)
+			if(c.getCardState() == readyToDealDamage)
 			{
-				attack(c, cardsOnBoard);
+				dealDamage(c, cardsOnBoard);
 			}
 		}
 		
@@ -290,33 +286,22 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 	
 		short temp = opponent->getSelectedCardIndex();
 
-		//below can be changed to be <= -1 set temp = 10
-		//Then delete the duplicated code
-		//setAttacking should be replaced with setStateinAttackingGroup
-		if(opponent->getSelectedCardIndex() > -1)
-		{
-			selectedCard.setTarget(temp);
-			selectedCard.setAttacking();
-			return;
-		}
-
-		temp = 10;
+		if(opponent->getSelectedCardIndex() <= -1)
+			temp = 10;
 
 		selectedCard.setTarget(temp);
-		selectedCard.setAttacking();
+		selectedCard.setStateInAttackingGroup();
 		return;
 	}
 
 	selectedCard.resetCardPosition();
 }
 
-void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
+void dealDamage(Card &selectedCard, vector<Card> &cardsOnBoard)
 {
 	short selectedCardTarget = selectedCard.getTarget();
 	short tempCardTarget;
 	short TEN = 10;
-
-	/* selectedCard.playAttackAnimation(mouse); */
 
 	if(selectedCard.getTarget() == 10)
 		opponent->damaged(selectedCard.getDamage());
@@ -335,7 +320,7 @@ void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
 				{
 					cardsOnBoard.at(i).setTarget(TEN);
 				}
-				if(tempCardTarget > selectedCardTarget && tempCardTarget != 10 && cardsOnBoard.at(i).getAttacking())
+				if(tempCardTarget > selectedCardTarget && tempCardTarget != 10 && (cardsOnBoard.at(i).getCardState() == inAttackingGroup))
 				{
 					tempCardTarget--;
 					cardsOnBoard.at(i).setTarget(tempCardTarget);
@@ -352,7 +337,7 @@ void attack(Card &selectedCard, vector<Card> &cardsOnBoard)
 		return;
 	}
 
-	selectedCard.attack();
+	selectedCard.dealDamage();
 }
 
 void killCard(Card &selectedCard, vector<Card> &cardsOnBoard)

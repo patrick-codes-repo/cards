@@ -20,14 +20,10 @@ class Card {
 		bool playCard(int p_numberOfCardsOnBoard);
 		state getCardState();
 		void setStateInHand();
-		void attack();
+		void dealDamage();
 		short getCost();
 		type getCardType();
 		short getDamage();
-		/* void resetAttacked(); */
-		/* bool getAttacked(); */
-		void setAttacking();
-		bool getAttacking();
 		void setTarget(short &targetIndex);
 		short getTarget();
 		short getHealth();
@@ -35,6 +31,7 @@ class Card {
 		void changeBoardPosition(int p_position);
 		void playAttackAnimation();
 		void setStateOnBoard();
+		void setStateInAttackingGroup();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -55,8 +52,6 @@ class Card {
 		void moveCardToSide();
 		int cardPosition;
 		type cardType;
-		/* bool attacked = false; */
-		bool attacking = false;
 		short attackTarget;
 		Uint32 animationEnd;
 };
