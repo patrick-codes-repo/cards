@@ -54,4 +54,5 @@ class Card {
 		type cardType;
 		short attackTarget;
 		Uint32 animationEnd;
+		int id;
 };
