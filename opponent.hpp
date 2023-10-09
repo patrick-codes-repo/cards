@@ -23,6 +23,7 @@ class Opponent {
 		short getCardDamage(short &cardIndex);
 		void resetCardDied();
 		bool getCardDied();
+		int getPlayersTarget();
 	private:
 		SDL_Renderer* renderer;
 		SDL_Texture* opponentHealthTexture; 
@@ -32,10 +33,10 @@ class Opponent {
 		short health;
 		char healthBuffer[50];
 		OpponentCard deck[4] = {
-			OpponentCard(renderer, 0, 1, 1, 1), 
-			OpponentCard(renderer, 1, 2, 2, 2), 
-			OpponentCard(renderer, 2, 3, 3, 3), 
-			OpponentCard(renderer, 3, 4, 4, 4)
+			OpponentCard(renderer, 0, 1, 1, 1, 20100), 
+			OpponentCard(renderer, 1, 2, 2, 2, 20200), 
+			OpponentCard(renderer, 2, 3, 3, 3, 20300),
+			OpponentCard(renderer, 3, 4, 4, 4, 20400)
 		};
 		vector<OpponentCard> cardsOnBoard;
 		short chooseCard();

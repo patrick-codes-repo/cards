@@ -9,7 +9,7 @@
 
 class Card {
 	public:
-		Card(SDL_Renderer* p_renderer, short cost,  short p_arrayPosition, short p_health, short p_damage);
+		Card(SDL_Renderer* p_renderer, short cost,  short p_arrayPosition, short p_health, short p_damage, int p_id);
 		void render(SDL_Renderer* p_renderer);
 		void damaged(SDL_Renderer* p_renderer, short p_damageTaken);
 		void update(Mouse p_mouse);
@@ -24,14 +24,17 @@ class Card {
 		short getCost();
 		type getCardType();
 		short getDamage();
-		void setTarget(short &targetIndex);
-		short getTarget();
+		/* void setTarget(short &targetIndex); */
+		void setTarget(int targetID);
+		/* short getTarget(); */
+		int getTarget();
 		short getHealth();
 		int getCardPosition();
 		void changeBoardPosition(int p_position);
 		void playAttackAnimation();
 		void setStateOnBoard();
 		void setStateInAttackingGroup();
+		int getID();
 	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
@@ -52,7 +55,7 @@ class Card {
 		void moveCardToSide();
 		int cardPosition;
 		type cardType;
-		short attackTarget;
+		int attackTarget;
 		Uint32 animationEnd;
-		int id;
+		int ID;
 };

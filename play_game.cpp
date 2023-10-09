@@ -38,9 +38,9 @@ int playGame()
 	SDL_Texture* card_image = window.loadTexture("resources/card.png");
 
 	Card deck[][4] = {
-		{Card(renderer, 0, 0, 1, 0), Card(renderer, 0, 1, 0, 0), Card(renderer, 0, 2, 2, 2), Card(renderer, 0, 3, 0, 0)},
-		{Card(renderer, 1, 0, 2, 2), Card(renderer, 1, 1, 1, 2), Card(renderer, 1, 2, 1, 1), Card(renderer, 1, 3, 0, 0)},
-		{Card(renderer, 2, 0, 2, 3), Card(renderer, 2, 1, 2, 2), Card(renderer, 2, 2, 3, 2), Card(renderer, 2, 3, 0, 0)} 
+		{Card(renderer, 0, 0, 1, 0, 10100), Card(renderer, 0, 1, 0, 0, 10200), Card(renderer, 0, 2, 2, 2, 10300), Card(renderer, 0, 3, 0, 0, 10400)},
+		{Card(renderer, 1, 0, 2, 2, 10500), Card(renderer, 1, 1, 1, 2, 10600), Card(renderer, 1, 2, 1, 1, 10700), Card(renderer, 1, 3, 0, 0, 10800)},
+		{Card(renderer, 2, 0, 2, 3, 10900), Card(renderer, 2, 1, 2, 2, 11000), Card(renderer, 2, 2, 3, 2, 11100), Card(renderer, 2, 3, 0, 0, 11200)} 
 	};
 
 	DummyCard handFillers[][4] = {
@@ -211,6 +211,7 @@ int playGame()
 			if(c.getCardState() == readyToDealDamage)
 			{
 				dealDamage(c, cardsOnBoard);
+				break;
 			}
 		}
 		
@@ -284,12 +285,8 @@ void checkIfCardAttacked(Card &selectedCard, bool &playerAttacking)
 		if(!playerAttacking)
 			playerAttacking = true;
 	
-		short temp = opponent->getSelectedCardIndex();
-
-		if(opponent->getSelectedCardIndex() <= -1)
-			temp = 10;
-
-		selectedCard.setTarget(temp);
+		int playersTarget = opponent->getPlayersTarget();
+		selectedCard.setTarget(playersTarget);
 		selectedCard.setStateInAttackingGroup();
 		return;
 	}
@@ -301,9 +298,8 @@ void dealDamage(Card &selectedCard, vector<Card> &cardsOnBoard)
 {
 	short selectedCardTarget = selectedCard.getTarget();
 	short tempCardTarget;
-	short TEN = 10;
 
-	if(selectedCard.getTarget() == 10)
+	if(selectedCard.getTarget() == OPPONENT_FACE)
 		opponent->damaged(selectedCard.getDamage());
 	else 
 	{
@@ -314,17 +310,17 @@ void dealDamage(Card &selectedCard, vector<Card> &cardsOnBoard)
 		{
 			for(int i = 0; i < cardsOnBoard.size(); i++)
 			{
-				tempCardTarget = cardsOnBoard.at(i).getTarget();
+				/* tempCardTarget = cardsOnBoard.at(i).getTarget(); */
 
-				if(tempCardTarget == selectedCardTarget)
+				if(cardsOnBoard.at(i).getTarget() == selectedCardTarget)
 				{
-					cardsOnBoard.at(i).setTarget(TEN);
+					cardsOnBoard.at(i).setTarget(OPPONENT_FACE);
 				}
-				if(tempCardTarget > selectedCardTarget && tempCardTarget != 10 && (cardsOnBoard.at(i).getCardState() == inAttackingGroup))
-				{
-					tempCardTarget--;
-					cardsOnBoard.at(i).setTarget(tempCardTarget);
-				}
+				/* if(tempCardTarget > selectedCardTarget && tempCardTarget != 10 && (cardsOnBoard.at(i).getCardState() == inAttackingGroup)) */
+				/* { */
+				/* 	tempCardTarget--; */
+				/* 	cardsOnBoard.at(i).setTarget(tempCardTarget); */
+				/* } */
 			}
 
 			opponent->resetCardDied();

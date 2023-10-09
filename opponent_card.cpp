@@ -4,8 +4,8 @@
 
 using namespace std;
 
-OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_damage, short p_cost)
-	:health(p_health), damage(p_damage), cost(p_cost)
+OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_damage, short p_cost, int p_id)
+	:health(p_health), damage(p_damage), cost(p_cost), ID(p_id)
 {
 }
 
@@ -162,4 +162,9 @@ void OpponentCard::changeBoardPosition(short p_position)
 void OpponentCard::attack()
 {
 	cout << "Opponent card " << boardPosition << " is attacking" << endl;
+}
+
+int OpponentCard::getID()
+{
+	return ID;
 }

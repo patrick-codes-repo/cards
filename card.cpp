@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Card::Card(SDL_Renderer* p_renderer, short p_cost, short p_arrayPosition, short p_health, short p_damage)
-	:ARRAY_POSITION(p_arrayPosition), health(p_health), damage(p_damage), cost(p_cost)
+Card::Card(SDL_Renderer* p_renderer, short p_cost, short p_arrayPosition, short p_health, short p_damage, int p_id)
+	:ARRAY_POSITION(p_arrayPosition), health(p_health), damage(p_damage), cost(p_cost), ID(p_id)
 {
 	if(health < 1)
 		cardType = spell;
@@ -223,7 +223,8 @@ void Card::setStateInHand()
 void Card::dealDamage()
 {
 	cardState = attackedThisTurn;
-	attackTarget = -1;
+	/* attackTarget = -1; */
+	attackTarget = NO_TARGET;
 }
 
 short Card::getCost()
@@ -246,13 +247,15 @@ void Card::setStateInAttackingGroup()
 	cardState = inAttackingGroup;
 }
 
-void Card::setTarget(short &targetIndex)
+void Card::setTarget(int targetID)
 {
-	attackTarget = targetIndex;
+	attackTarget = targetID;
+	/* attackTarget = targetIndex; */
 }
 
-short Card::getTarget()
+int Card::getTarget()
 {
+	/* return attackTarget; */
 	return attackTarget;
 }
 
@@ -281,4 +284,9 @@ void Card::playAttackAnimation()
 void Card::setStateOnBoard()
 {
 	cardState = onBoard;
+}
+
+int Card::getID()
+{
+	return ID;
 }

@@ -151,9 +151,31 @@ short Opponent::getSelectedCardIndex()
 	return -1;
 }
 
-void Opponent::damageCard(short &cardIndex, short p_damageTaken)
+int Opponent::getPlayersTarget()
 {
-	short cardsRemainingHealth = cardsOnBoard.at(cardIndex).damaged(renderer, p_damageTaken);	
+	for(int i = 0; i < cardsOnBoard.size(); i++)
+	{
+		if(cardsOnBoard.at(i).getIsSelected())
+			return cardsOnBoard.at(i).getID();
+	}
+	return OPPONENT_FACE;
+}
+
+void Opponent::damageCard(short &cardID, short p_damageTaken)
+{
+	/* short cardsRemainingHealth = cardsOnBoard.at(cardIndex).damaged(renderer, p_damageTaken); */	
+	short cardsRemainingHealth = 1;
+	short cardIndex;
+
+	for(int i = 0; i < cardsOnBoard.size(); i++)
+	{
+		if(cardsOnBoard.at(i).getID() == cardID)
+		{
+			cardsRemainingHealth = cardsOnBoard.at(i).damaged(renderer, p_damageTaken);
+			cardIndex = i;
+			break;
+		}
+	}
 
 	if(cardsRemainingHealth > 0)
 		return;
@@ -187,7 +209,14 @@ void Opponent::refreshCardPositions()
 		cardsOnBoard.at(i).changeBoardPosition(i);
 }
 
-short Opponent::getCardDamage(short &cardIndex)
+short Opponent::getCardDamage(short &cardID)
 {
-	return cardsOnBoard.at(cardIndex).getDamage();
+	/* return cardsOnBoard.at(cardIndex).getDamage(); */
+	for(int i = 0; i < cardsOnBoard.size(); i++)
+	{
+		if(cardsOnBoard.at(i).getID() == cardID)
+		{
+			return cardsOnBoard.at(i).getDamage();
+		}
+	}
 }
