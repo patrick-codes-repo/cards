@@ -51,22 +51,44 @@ void Opponent::renderCards()
 		}
 }
 
-bool Opponent::makeMove()
+bool Opponent::makeMove(vector<Card> &playerCards)
 {
 	bool cardPlayed = playCard();
 
 	if(cardPlayed)
 		return true;
 
-	if(cardsOnBoard.size() > 0 && !attacking)
+	/* if(cardsOnBoard.size() > 0 && !attacking) */
+	/* { */
+	/* 	cardsOnBoard.at(0).attack(); */
+	/* 	attack(); */
+	/* 	attacking = true; */
+	/* 	return true; */
+	/* } */
+
+	attack(playerCards);
+
+	if(attacking)
 	{
-		cardsOnBoard.at(0).attack();
-		attacking = true;
+		attacking = false;
 		return true;
 	}
 
 	attacking = false;
 	return false;
+}
+
+void Opponent::attack(vector<Card> &playerCards)
+{
+	if(cardsOnBoard.size() > 0 && !attacking)
+	{
+		if(playerCards.size() == 0)
+			cardsOnBoard.at(0).setTarget(PLAYER_FACE);
+		else
+			cardsOnBoard.at(0).setTarget(playerCards.at(0).getID());
+		cardsOnBoard.at(0).attack();
+		attacking = true;
+	}
 }
 
 bool Opponent::playCard()

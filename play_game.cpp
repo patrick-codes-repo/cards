@@ -103,7 +103,7 @@ int playGame()
 
 		if(!playersTurn)
 		{
-			if(opponent->makeMove())
+			if(opponent->makeMove(cardsOnBoard))
 			{
 				playerSkipped = false;
 				opponentSkipped = false;

@@ -161,10 +161,15 @@ void OpponentCard::changeBoardPosition(short p_position)
 
 void OpponentCard::attack()
 {
-	cout << "Opponent card " << boardPosition << " is attacking" << endl;
+	cout << "Opponent card " << boardPosition << " is attacking card ID " << attackTarget << endl;
 }
 
 int OpponentCard::getID()
 {
 	return ID;
+}
+
+void OpponentCard::setTarget(int targetID)
+{
+	attackTarget = targetID;
 }

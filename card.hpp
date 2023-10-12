@@ -24,9 +24,7 @@ class Card {
 		short getCost();
 		type getCardType();
 		short getDamage();
-		/* void setTarget(short &targetIndex); */
 		void setTarget(int targetID);
-		/* short getTarget(); */
 		int getTarget();
 		short getHealth();
 		int getCardPosition();

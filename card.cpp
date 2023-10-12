@@ -223,7 +223,6 @@ void Card::setStateInHand()
 void Card::dealDamage()
 {
 	cardState = attackedThisTurn;
-	/* attackTarget = -1; */
 	attackTarget = NO_TARGET;
 }
 
@@ -250,12 +249,10 @@ void Card::setStateInAttackingGroup()
 void Card::setTarget(int targetID)
 {
 	attackTarget = targetID;
-	/* attackTarget = targetIndex; */
 }
 
 int Card::getTarget()
 {
-	/* return attackTarget; */
 	return attackTarget;
 }
 
