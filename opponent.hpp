@@ -11,7 +11,7 @@ class Opponent {
 		Opponent(SDL_Renderer* p_renderer, short p_health);
 		void damaged(short damageTaken);
 		void healed();
-		bool makeMove(vector<Card> &playerCards);
+		bool makeMove(vector<Card> &playerCards, short &playerHealth);
 		void renderHealth();
 		void renderMana();
 		void renderCards();
@@ -48,5 +48,5 @@ class Opponent {
 		bool cardDied = false;
 		bool playCard();
 		bool attacking = false;
-		void attack(vector<Card> &playerCards);
+		void attack(vector<Card> &playerCards, short &playerHealth);
 };

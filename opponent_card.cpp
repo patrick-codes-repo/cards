@@ -173,3 +173,8 @@ void OpponentCard::setTarget(int targetID)
 {
 	attackTarget = targetID;
 }
+
+int OpponentCard::getTarget()
+{
+	return attackTarget;
+}

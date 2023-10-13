@@ -51,22 +51,14 @@ void Opponent::renderCards()
 		}
 }
 
-bool Opponent::makeMove(vector<Card> &playerCards)
+bool Opponent::makeMove(vector<Card> &playerCards, short &playerHealth)
 {
 	bool cardPlayed = playCard();
 
 	if(cardPlayed)
 		return true;
 
-	/* if(cardsOnBoard.size() > 0 && !attacking) */
-	/* { */
-	/* 	cardsOnBoard.at(0).attack(); */
-	/* 	attack(); */
-	/* 	attacking = true; */
-	/* 	return true; */
-	/* } */
-
-	attack(playerCards);
+	attack(playerCards, playerHealth);
 
 	if(attacking)
 	{
@@ -78,9 +70,9 @@ bool Opponent::makeMove(vector<Card> &playerCards)
 	return false;
 }
 
-void Opponent::attack(vector<Card> &playerCards)
+void Opponent::attack(vector<Card> &playerCards, short &playerHealth)
 {
-	if(cardsOnBoard.size() > 0 && !attacking)
+	if(!attacking)
 	{
 		if(playerCards.size() == 0)
 			cardsOnBoard.at(0).setTarget(PLAYER_FACE);
@@ -89,6 +81,21 @@ void Opponent::attack(vector<Card> &playerCards)
 		cardsOnBoard.at(0).attack();
 		attacking = true;
 	}
+
+	bool targetFound = false;
+
+	for(Card &c : playerCards)
+	{
+		if(c.getID() == cardsOnBoard.at(0).getTarget())
+		{
+			c.damaged(renderer, cardsOnBoard.at(0).getDamage());
+			//needs to redraw player health
+			targetFound = true;
+		}
+	}
+
+	if(!targetFound)
+		playerHealth -= cardsOnBoard.at(0).getDamage();
 }
 
 bool Opponent::playCard()
