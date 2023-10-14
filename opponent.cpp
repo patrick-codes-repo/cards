@@ -58,16 +58,18 @@ bool Opponent::makeMove(vector<Card> &playerCards, short &playerHealth)
 	if(cardPlayed)
 		return true;
 
-	attack(playerCards, playerHealth);
+	if(cardsOnBoard.size() == 0)
+		return false;
 
 	if(attacking)
 	{
 		attacking = false;
-		return true;
+		return false;
 	}
+	
+	attack(playerCards, playerHealth);
 
-	attacking = false;
-	return false;
+	return true;
 }
 
 void Opponent::attack(vector<Card> &playerCards, short &playerHealth)
@@ -83,19 +85,26 @@ void Opponent::attack(vector<Card> &playerCards, short &playerHealth)
 	}
 
 	bool targetFound = false;
+	short cardsRemainingHealth; 
+	short ZERO = 0;
 
 	for(Card &c : playerCards)
 	{
 		if(c.getID() == cardsOnBoard.at(0).getTarget())
 		{
 			c.damaged(renderer, cardsOnBoard.at(0).getDamage());
-			//needs to redraw player health
+			cardsRemainingHealth = cardsOnBoard.at(0).damaged(renderer, c.getDamage());
 			targetFound = true;
+			break;
 		}
 	}
 
 	if(!targetFound)
 		playerHealth -= cardsOnBoard.at(0).getDamage();
+		//needs to redraw player health
+	
+	if(cardsRemainingHealth <= 0)
+		killCard(ZERO);
 }
 
 bool Opponent::playCard()

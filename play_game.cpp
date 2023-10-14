@@ -107,6 +107,7 @@ int playGame()
 			{
 				playerSkipped = false;
 				opponentSkipped = false;
+				drawPlayerHealth();
 			}
 			else
 				opponentSkipped = true;
@@ -480,6 +481,7 @@ void drawPlayerHealth()
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
+	cout << "player h " << playerHealth << endl;
 	SDL_Color fontColor = {255, 0, 0};
 
 	TTF_Font* playerHealthFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
