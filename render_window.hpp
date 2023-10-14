@@ -13,7 +13,7 @@ class RenderWindow
 		void render(Entity& p_entity);
 		void display();
 		void cleanUp();
-		SDL_Renderer* getRenderer();
+		/* SDL_Renderer* getRenderer(); */
 
 	private:
 		SDL_Window* window;
