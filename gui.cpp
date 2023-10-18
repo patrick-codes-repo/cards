@@ -3,7 +3,12 @@
 #include <iostream>
 #include <vector>
 
-#include "play_game.hpp"
+/* #include "play_game.hpp" */
+#include "button.hpp"
+#include "mouse.hpp"
+#include "render_window.hpp"
+#include "globals.hpp"
+#include "entity.hpp"
 
 using namespace std;
 
@@ -31,7 +36,7 @@ int main()
 				gameLoopValue = mainMenu();
 				break;
 			case 2:
-				gameLoopValue = playGame();
+				/* gameLoopValue = playGame(); */
 				break;
 			default:
 				return 0;
@@ -42,23 +47,21 @@ int main()
 int mainMenu()
 {
 	RenderWindow window("Main Menu");
-	SDL_Renderer* renderer = window.getRenderer();
 
-	Mouse mouse(renderer);
+	SDL_Texture* backgroundImage = window.loadTexture("resources/background.png");
 
-	Button play_button(renderer, 50, 115, SCREEN_WIDTH/2 - 100, 500);
-	Button exit_button(renderer, 50, 115, SCREEN_WIDTH/2 - 100, 600);
+	Mouse mouse(window.loadTexture("resources/cursor.png"));
 
-	SDL_Texture* background_image = window.loadTexture("resources/background.png");
+	Button playButton(window.loadTexture("resources/buttons.png"), 50, 115, SCREEN_WIDTH/2 - 100, 500);
+	Button exitButton(window.loadTexture("resources/buttons.png"), 50, 115, SCREEN_WIDTH/2 - 100, 600);
 
-	vector<Entity> entity_array = {Entity(1616, 1215, 'b', background_image)};
 	SDL_Event event;
 
 	while(true)
 	{
 		mouse.update();
-		play_button.update(mouse);
-		exit_button.update(mouse);
+		playButton.update(mouse);
+		exitButton.update(mouse);
 
 		while(SDL_PollEvent(&event))
 		{
@@ -70,14 +73,14 @@ int mainMenu()
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
 					{
-						if (play_button.getIsSelected())
+						if (playButton.getIsSelected())
 						{
 							cout << "play clicked" << endl;
 							window.cleanUp();
 							return 2;
 						}
 						
-						else if (exit_button.getIsSelected())
+						else if (exitButton.getIsSelected())
 						{
 							cout << "exit clicked" << endl;
 							window.cleanUp();
@@ -90,14 +93,11 @@ int mainMenu()
 		
 		window.clear();
 		
-		for(Entity& e : entity_array)
-		{
-			window.render(e);
-		}
+		window.renderBackground(backgroundImage);
 
-		play_button.draw(renderer);
-		exit_button.draw(renderer);
-		mouse.draw(renderer);
+		window.renderButton(playButton);
+		window.renderButton(exitButton);
+		window.renderMouse(mouse);
 
 		window.display();
 	}

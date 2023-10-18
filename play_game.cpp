@@ -1,6 +1,6 @@
 #include "play_game.hpp"
 
-SDL_Renderer* renderer; 
+/* SDL_Renderer* renderer; */ 
 
 short handDisplayController = 0;
 bool playersTurn = true;
@@ -24,7 +24,7 @@ Opponent* opponent;
 int playGame()
 {
 	RenderWindow window ("Playing Game");
-	renderer = window.getRenderer();
+	/* renderer = window.getRenderer(); */
 
 	Mouse mouse (renderer);
 	

@@ -2,19 +2,16 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h> 
 
-#include "render_window.hpp"
-
 class Mouse {
 	public:
-		Mouse(SDL_Renderer* p_renderer);
+		Mouse(SDL_Texture* p_mouseTexture);
 		void update();
-		void draw(SDL_Renderer* p_renderer);
 		int getCollisionRectX();
 		int getCollisionRectY();
+		SDL_Texture* getTexture();
 		SDL_Rect collisionRect;
-
+		SDL_Rect imageRect;
 	private:
-		SDL_Texture* mouse_texture;
-		SDL_Rect image_rect;
+		SDL_Texture* mouseTexture;
 		void correctMousePosition();
 };

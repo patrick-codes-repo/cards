@@ -4,11 +4,11 @@
 #include <iostream>
 using namespace std;
 
-Mouse::Mouse(SDL_Renderer* p_renderer)
+Mouse::Mouse(SDL_Texture* p_mouseTexture)
+	:mouseTexture(p_mouseTexture)
 {
-	mouse_texture = IMG_LoadTexture(p_renderer, "resources/cursor.png");
-	image_rect.w = 35;
-	image_rect.h = 35;
+	imageRect.w = 35;
+	imageRect.h = 35;
 	collisionRect.w = 1;
 	collisionRect.h = 1;
 
@@ -18,28 +18,29 @@ Mouse::Mouse(SDL_Renderer* p_renderer)
 
 void Mouse::update()
 {
-	SDL_GetMouseState(&image_rect.x, &image_rect.y);
+	SDL_GetMouseState(&imageRect.x, &imageRect.y);
 
-	if(image_rect.x >= SCREEN_WIDTH || image_rect.y >= SCREEN_HEIGHT)
+	if(imageRect.x >= SCREEN_WIDTH || imageRect.y >= SCREEN_HEIGHT)
 		correctMousePosition();
 
-	collisionRect.x = image_rect.x;
-	collisionRect.y = image_rect.y;
+	collisionRect.x = imageRect.x;
+	collisionRect.y = imageRect.y;
 }
 
 void Mouse::correctMousePosition()
 {
-	if(image_rect.x >= SCREEN_WIDTH)
-		image_rect.x = SCREEN_WIDTH - 1;
+	if(imageRect.x >= SCREEN_WIDTH)
+		imageRect.x = SCREEN_WIDTH - 1;
 
-	if(image_rect.y >= SCREEN_HEIGHT)
-		image_rect.y = SCREEN_HEIGHT - 1;
+	if(imageRect.y >= SCREEN_HEIGHT)
+		imageRect.y = SCREEN_HEIGHT - 1;
 
-	SDL_WarpMouseInWindow(NULL, image_rect.x, image_rect.y);
+	SDL_WarpMouseInWindow(NULL, imageRect.x, imageRect.y);
 }
-void Mouse::draw(SDL_Renderer* p_renderer)
+
+SDL_Texture* Mouse::getTexture()
 {
-	SDL_RenderCopy(p_renderer, mouse_texture, NULL, &image_rect);
+	return mouseTexture;
 }
 
 int Mouse::getCollisionRectX()

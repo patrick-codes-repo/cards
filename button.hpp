@@ -8,13 +8,13 @@
 class Button
 {
 	public:
-		Button(SDL_Renderer* p_renderer, int p_sourceX, int p_sourceY, int p_destX, int p_destY);
+		Button(SDL_Texture* p_buttonTexture, int p_sourceX, int p_sourceY, int p_destX, int p_destY);
 		void update(Mouse p_mouse);
-		void draw(SDL_Renderer* p_renderer);
 		bool getIsSelected();
-
+		SDL_Rect source;
+		SDL_Rect destination;
+		SDL_Texture* getTexture();
 	private:
-		SDL_Texture* button_texture;
-		SDL_Rect source, destination;
-		bool is_selected = false;
+		bool isSelected = false;
+		SDL_Texture* buttonTexture;
 };

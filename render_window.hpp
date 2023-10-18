@@ -3,6 +3,8 @@
 #include <SDL2/SDL_image.h>
 
 #include "entity.hpp"
+#include "mouse.hpp"
+#include "button.hpp"
 
 class RenderWindow
 {
@@ -13,8 +15,9 @@ class RenderWindow
 		void render(Entity& p_entity);
 		void display();
 		void cleanUp();
-		/* SDL_Renderer* getRenderer(); */
-
+		void renderMouse(Mouse &mouse);
+		void renderButton(Button &button);
+		void renderBackground(SDL_Texture* p_backgroundImage);
 	private:
 		SDL_Window* window;
 		SDL_Renderer* renderer;

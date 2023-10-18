@@ -35,12 +35,6 @@ void RenderWindow::clear()
 
 void RenderWindow::render(Entity& p_entity)
 {
-	if(p_entity.getType() == 'b')
-	{
-		SDL_RenderCopy(renderer, p_entity.getTexture(), NULL, NULL);
-		return;
-	}
-	
 	SDL_Rect source;
 	source.x = p_entity.getCurrentFrame().x;
 	source.y = p_entity.getCurrentFrame().y;
@@ -61,9 +55,19 @@ void RenderWindow::display()
 	SDL_RenderPresent(renderer);
 }
 
-SDL_Renderer* RenderWindow::getRenderer()
+void RenderWindow::renderMouse(Mouse &mouse)
 {
-	return renderer;
+	SDL_RenderCopy(renderer, mouse.getTexture(), NULL, &mouse.imageRect);
+}
+
+void RenderWindow::renderButton(Button &button)
+{
+	SDL_RenderCopy(renderer, button.getTexture(), &button.source, &button.destination);
+}
+
+void RenderWindow::renderBackground(SDL_Texture* p_backgroundImage)
+{
+	SDL_RenderCopy(renderer, p_backgroundImage, NULL, NULL);
 }
 
 void RenderWindow::cleanUp()
