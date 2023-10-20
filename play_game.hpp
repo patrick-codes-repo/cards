@@ -16,7 +16,7 @@
 
 using namespace std;
 
-extern SDL_Renderer* renderer; 
+/* extern SDL_Renderer* renderer; */ 
 extern short handDisplayController;
 extern bool playersTurn;
 extern short playerHealth;

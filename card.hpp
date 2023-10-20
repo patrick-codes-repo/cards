@@ -9,9 +9,9 @@
 
 class Card {
 	public:
-		Card(SDL_Renderer* p_renderer, short cost,  short p_arrayPosition, short p_health, short p_damage, int p_id);
-		void render(SDL_Renderer* p_renderer);
-		void damaged(SDL_Renderer* p_renderer, short p_damageTaken);
+		Card(short cost,  short p_arrayPosition, short p_health, short p_damage, int p_id);
+		/* void render(SDL_Renderer* p_renderer); */
+		void damaged(short p_damageTaken);
 		void update(Mouse p_mouse);
 		void moveCard(Mouse p_mouse);
 		bool getIsSelected();
@@ -33,23 +33,23 @@ class Card {
 		void setStateOnBoard();
 		void setStateInAttackingGroup();
 		int getID();
-	private:
 		SDL_Texture* targetTexture;
 		SDL_Texture* noNumbers;
 		SDL_Rect targetDest;
-		SDL_Rect healthTextDest;
-		SDL_Rect damageTextDest;
-		SDL_Rect costTextDest;
+	private:
+		/* SDL_Rect healthTextDest; */
+		/* SDL_Rect damageTextDest; */
+		/* SDL_Rect costTextDest; */
 		short health;
 		short damage;
 		short cost;
-		char healthBuffer[50];
-		char damageBuffer[50];
-		char costBuffer[50];
+		/* char healthBuffer[50]; */
+		/* char damageBuffer[50]; */
+		/* char costBuffer[50]; */
 		short ARRAY_POSITION;
 		state cardState = inHand;
 		bool isSelected = false;
-		void drawDynamicStats(SDL_Renderer* p_renderer);
+		/* void drawDynamicStats(SDL_Renderer* p_renderer); */
 		void moveCardToSide();
 		int cardPosition;
 		type cardType;

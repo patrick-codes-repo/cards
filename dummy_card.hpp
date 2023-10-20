@@ -9,16 +9,16 @@
 
 class DummyCard {
 	public:
-		DummyCard(SDL_Renderer* p_renderer, short p_arrayPosition);
-		void render(SDL_Renderer* p_renderer);
+		DummyCard(short p_arrayPosition);
+		/* void render(SDL_Renderer* p_renderer); */
 		void update(Mouse p_mouse);
 		bool getIsSelected();
 		void resetCardPosition();
 		void setIsVisible();
 		bool getIsVisible();
-	private:
 		SDL_Texture* targetTexture;
 		SDL_Rect targetDest;
+	private:
 		short ARRAY_POSITION;
 		bool isSelected = false;
 		bool isVisible = false;

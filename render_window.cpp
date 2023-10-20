@@ -28,6 +28,16 @@ SDL_Texture* RenderWindow::loadTexture(const char* filePath)
 	return texture;
 }
 
+SDL_Texture* RenderWindow::createTextureFromSurface(SDL_Surface* surface)
+{
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+
+	if (texture == NULL)
+		cout << "Failed to create texture from surface: " << SDL_GetError() << endl;
+
+	return texture;
+}
+
 void RenderWindow::clear()
 {
 	SDL_RenderClear(renderer);
@@ -68,6 +78,185 @@ void RenderWindow::renderButton(Button &button)
 void RenderWindow::renderBackground(SDL_Texture* p_backgroundImage)
 {
 	SDL_RenderCopy(renderer, p_backgroundImage, NULL, NULL);
+}
+
+void RenderWindow::renderStat(SDL_Texture* texture, SDL_Rect &destination)
+{
+	SDL_RenderCopy(renderer, texture, NULL, &destination);
+}
+
+void RenderWindow::initializeCardTextures(Card &card)
+{
+	card.targetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
+	card.noNumbers = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
+
+	if(card.targetTexture == NULL)
+		cout << "Card render target not created: " << SDL_GetError() << endl;
+	
+	if(card.noNumbers == NULL)
+		cout << "Card noNumbers not created: " << SDL_GetError() << endl;
+
+	if(SDL_SetRenderTarget(renderer, card.noNumbers) < 0)
+		cout << "Changing render target to noNumbers failed: " << SDL_GetError() << endl;
+
+	SDL_Texture* cardBackground = IMG_LoadTexture(renderer, "resources/card.jpg");
+	SDL_Rect backgroundSource;
+	backgroundSource.x = 0;
+	backgroundSource.y = 0;
+	backgroundSource.w = BACKGROUND_ORIGIN_WIDTH;
+	backgroundSource.h = BACKGROUND_ORIGIN_HEIGHT;
+	SDL_RenderCopy(renderer, cardBackground, &backgroundSource, NULL);
+	SDL_DestroyTexture(cardBackground);
+
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	SDL_Color fontColor = { 255, 255, 255 };
+
+	TTF_Font* cardDescriptionFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
+	SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, "Welcome to\nGigi Labs", fontColor, 0);
+	SDL_Texture* cardDescriptionTexture = SDL_CreateTextureFromSurface(renderer, cardDescriptionSurface);
+	SDL_Rect descriptionTextDest;
+	descriptionTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - cardDescriptionSurface->w/2;
+	descriptionTextDest.y = BACKGROUND_ORIGIN_HEIGHT/2;
+	descriptionTextDest.w = cardDescriptionSurface->w;
+	descriptionTextDest.h = cardDescriptionSurface->h;
+	SDL_RenderCopy(renderer, cardDescriptionTexture, NULL, &descriptionTextDest);
+	TTF_CloseFont(cardDescriptionFont);
+	SDL_FreeSurface(cardDescriptionSurface);
+	SDL_DestroyTexture(cardDescriptionTexture);
+
+	TTF_Quit();
+
+	drawCardsDynamicStats(card);
+}
+
+void RenderWindow::drawCardsDynamicStats(Card &card)
+{
+	if(SDL_SetRenderTarget(renderer, card.targetTexture) < 0)
+		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
+
+	SDL_RenderCopy(renderer, card.noNumbers, NULL, NULL);
+
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
+
+	char statTextBuffer[50];
+
+	SDL_Color fontColor = { 255, 0, 0 };
+
+	sprintf(statTextBuffer, "%d", card.getHealth());
+	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, statTextBuffer, fontColor, 0);
+	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(renderer, healthSurface);
+	SDL_Rect healthTextDest;
+	healthTextDest.x = BACKGROUND_ORIGIN_WIDTH - 200;
+	healthTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
+	healthTextDest.w = healthSurface->w;
+	healthTextDest.h = healthSurface->h;
+	SDL_RenderCopy(renderer, healthTexture, NULL, &healthTextDest);
+	SDL_FreeSurface(healthSurface);
+	
+	fontColor = { 255, 255, 255 };
+
+	sprintf(statTextBuffer, "%d", card.getDamage());
+	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, statTextBuffer, fontColor, 0);
+	SDL_Texture* damageTexture = SDL_CreateTextureFromSurface(renderer, damageSurface);
+	SDL_Rect damageTextDest;
+	damageTextDest.x = 100;
+	damageTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
+	damageTextDest.w = damageSurface->w;
+	damageTextDest.h = damageSurface->h;
+	SDL_RenderCopy(renderer, damageTexture, NULL, &damageTextDest);
+	SDL_FreeSurface(damageSurface);
+	
+	sprintf(statTextBuffer, "%d", card.getCost());
+	SDL_Surface* costSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, statTextBuffer, fontColor, 0);
+	SDL_Texture* costTexture = SDL_CreateTextureFromSurface(renderer, costSurface);
+	SDL_Rect costTextDest;
+	costTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - costSurface->w/2;
+	costTextDest.y = 0;
+	costTextDest.w = costSurface->w;
+	costTextDest.h = costSurface->h;
+	SDL_RenderCopy(renderer, costTexture, NULL, &costTextDest);
+	SDL_FreeSurface(costSurface);
+
+	TTF_CloseFont(cardStatsFont);
+	TTF_Quit();
+
+	if(SDL_SetRenderTarget(renderer, NULL) < 0)
+		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
+}
+
+void RenderWindow::renderCard(Card &card)
+{
+	SDL_RenderCopy(renderer, card.targetTexture, NULL, &card.targetDest);
+}
+
+void RenderWindow::initializeDummyCardTextures(DummyCard &dummyCard)
+{
+	dummyCard.targetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
+
+	if(dummyCard.targetTexture == NULL)
+		cout << "render target not created: " << SDL_GetError() << endl;
+
+	if(SDL_SetRenderTarget(renderer, dummyCard.targetTexture) < 0)
+		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
+
+	SDL_Texture* cardBackground = IMG_LoadTexture(renderer, "resources/dummy_card.jpg");
+	SDL_Rect backgroundSource;
+	backgroundSource.x = 0;
+	backgroundSource.y = 0;
+	backgroundSource.w = BACKGROUND_ORIGIN_WIDTH;
+	backgroundSource.h = BACKGROUND_ORIGIN_HEIGHT;
+	SDL_RenderCopy(renderer, cardBackground, &backgroundSource, NULL);
+	SDL_DestroyTexture(cardBackground);
+
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	SDL_Color fontColor = { 255, 255, 255 };
+
+	TTF_Font* cardDescriptionFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
+	SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, "This is a\ndummy card", fontColor, 0);
+	SDL_Texture* cardDescriptionTexture = SDL_CreateTextureFromSurface(renderer, cardDescriptionSurface);
+	SDL_Rect descriptionTextDest;
+	descriptionTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - cardDescriptionSurface->w/2;
+	descriptionTextDest.y = BACKGROUND_ORIGIN_HEIGHT/2;
+	descriptionTextDest.w = cardDescriptionSurface->w;
+	descriptionTextDest.h = cardDescriptionSurface->h;
+	SDL_RenderCopy(renderer, cardDescriptionTexture, NULL, &descriptionTextDest);
+	TTF_CloseFont(cardDescriptionFont);
+	SDL_FreeSurface(cardDescriptionSurface);
+	SDL_DestroyTexture(cardDescriptionTexture);
+
+
+	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
+	char healthBuffer[16];
+	short health = 5;
+	sprintf(healthBuffer, "%d", health);
+	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0);
+	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(renderer, healthSurface);
+	SDL_Rect healthTextDest;
+	healthTextDest.x = BACKGROUND_ORIGIN_WIDTH - 200;
+	healthTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
+	healthTextDest.w = healthSurface->w;
+	healthTextDest.h = healthSurface->h;
+	SDL_RenderCopy(renderer, healthTexture, NULL, &healthTextDest);
+	TTF_CloseFont(cardStatsFont);
+	SDL_FreeSurface(healthSurface);
+	SDL_DestroyTexture(healthTexture);
+
+	TTF_Quit();
+
+	if(SDL_SetRenderTarget(renderer, NULL) < 0)
+		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
+}
+
+void RenderWindow::renderDummyCard(DummyCard &dummyCard)
+{
+	SDL_RenderCopy(renderer, dummyCard.targetTexture, NULL, &dummyCard.targetDest);
 }
 
 void RenderWindow::cleanUp()

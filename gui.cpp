@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-/* #include "play_game.hpp" */
+#include "play_game.hpp"
 #include "button.hpp"
 #include "mouse.hpp"
 #include "render_window.hpp"
@@ -36,7 +36,7 @@ int main()
 				gameLoopValue = mainMenu();
 				break;
 			case 2:
-				/* gameLoopValue = playGame(); */
+				gameLoopValue = playGame();
 				break;
 			default:
 				return 0;
