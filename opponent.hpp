@@ -8,13 +8,13 @@ using namespace std;
 
 class Opponent {
 	public:
-		Opponent(SDL_Renderer* p_renderer, short p_health);
+		Opponent(short p_health);
 		void damaged(short damageTaken);
 		void healed();
 		bool makeMove(vector<Card> &playerCards, short &playerHealth);
-		void renderHealth();
-		void renderMana();
-		void renderCards();
+		/* void renderHealth(); */
+		/* void renderMana(); */
+		/* void renderCards(); */
 		void updateCards(Mouse p_mouse);
 		void setMana(short &newManaAmount);
 		void drawMana();
@@ -25,21 +25,21 @@ class Opponent {
 		void resetCardDied();
 		bool getCardDied();
 		int getPlayersTarget();
-	private:
-		SDL_Renderer* renderer;
 		SDL_Texture* opponentHealthTexture; 
-		SDL_Rect healthTextDest;
 		SDL_Texture* manaTexture; 
+		SDL_Rect healthTextDest;
 		SDL_Rect manaTextDest;
+		vector<OpponentCard> cardsOnBoard;
+	private:
+		/* SDL_Renderer* renderer; */
 		short health;
 		char healthBuffer[50];
 		OpponentCard deck[4] = {
-			OpponentCard(renderer, 0, 1, 1, 1, 20100), 
-			OpponentCard(renderer, 1, 2, 2, 2, 20200), 
-			OpponentCard(renderer, 2, 3, 3, 3, 20300),
-			OpponentCard(renderer, 3, 4, 4, 4, 20400)
+			OpponentCard(0, 1, 1, 1, 20100), 
+			OpponentCard(1, 2, 2, 2, 20200), 
+			OpponentCard(2, 3, 3, 3, 20300),
+			OpponentCard(3, 4, 4, 4, 20400)
 		};
-		vector<OpponentCard> cardsOnBoard;
 		short chooseCard();
 		short mana = 1;
 		char manaBuffer[10];

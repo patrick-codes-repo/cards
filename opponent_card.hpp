@@ -9,9 +9,9 @@
 
 class OpponentCard {
 	public:
-		OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_damage, short p_cost, int p_id);
-		void render(SDL_Renderer* p_renderer);
-		short damaged(SDL_Renderer* p_renderer, short p_damageTaken);
+		OpponentCard(short p_arrayPosition, short p_health, short p_damage, short p_cost, int p_id);
+		/* void render(SDL_Renderer* p_renderer); */
+		short damaged(short p_damageTaken);
 		void update(Mouse p_mouse);
 		void moveCard(Mouse p_mouse);
 		int getCardY();
@@ -25,10 +25,11 @@ class OpponentCard {
 		int getID();
 		void setTarget(int targetID);
 		int getTarget();
-	private:
 		SDL_Texture* targetTexture;
-		SDL_Texture* noNumbers;
 		SDL_Rect targetDest;
+		SDL_Texture* noNumbers;
+		short getHealth();
+	private:
 		SDL_Rect healthTextDest;
 		SDL_Rect damageTextDest;
 		short boardPosition;
@@ -40,7 +41,7 @@ class OpponentCard {
 		bool isSelected = false;
 		void createCardTexture(SDL_Renderer* p_renderer);
 		bool hasBeenPlayed = false;
-		void drawDynamicStats(SDL_Renderer* p_renderer);
+		/* void drawDynamicStats(SDL_Renderer* p_renderer); */
 		int ID;
 		int attackTarget;
 };

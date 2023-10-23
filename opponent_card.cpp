@@ -4,7 +4,7 @@
 
 using namespace std;
 
-OpponentCard::OpponentCard(SDL_Renderer* p_renderer, short p_arrayPosition, short p_health, short p_damage, short p_cost, int p_id)
+OpponentCard::OpponentCard(short p_arrayPosition, short p_health, short p_damage, short p_cost, int p_id)
 	:health(p_health), damage(p_damage), cost(p_cost), ID(p_id)
 {
 }
@@ -57,49 +57,49 @@ void OpponentCard::createCardTexture(SDL_Renderer* p_renderer)
 	drawDynamicStats(p_renderer);
 }
 
-void OpponentCard::drawDynamicStats(SDL_Renderer* p_renderer)
-{
-	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0)
-		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl;
+/* void OpponentCard::drawDynamicStats(SDL_Renderer* p_renderer) */
+/* { */
+/* 	if(SDL_SetRenderTarget(p_renderer, targetTexture) < 0) */
+/* 		cout << "Changing render target to targetTexture failed: " << SDL_GetError() << endl; */
 
-	SDL_RenderCopy(p_renderer, noNumbers, NULL, NULL);
+/* 	SDL_RenderCopy(p_renderer, noNumbers, NULL, NULL); */
 
-	if(TTF_Init() < 0)
-		cout << "tff_init error: " << SDL_GetError() << endl;
+/* 	if(TTF_Init() < 0) */
+/* 		cout << "tff_init error: " << SDL_GetError() << endl; */
 
-	SDL_Color fontColor = { 255, 0, 0 };
+/* 	SDL_Color fontColor = { 255, 0, 0 }; */
 
-	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200);
-	sprintf(healthBuffer, "%d", health);
-	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0);
-	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface);
-	healthTextDest.x = BACKGROUND_ORIGIN_WIDTH - 200;
-	healthTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
-	healthTextDest.w = healthSurface->w;
-	healthTextDest.h = healthSurface->h;
-	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest);
-	SDL_FreeSurface(healthSurface);
-	SDL_DestroyTexture(healthTexture);
+/* 	TTF_Font* cardStatsFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 200); */
+/* 	sprintf(healthBuffer, "%d", health); */
+/* 	SDL_Surface* healthSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, healthBuffer, fontColor, 0); */
+/* 	SDL_Texture* healthTexture = SDL_CreateTextureFromSurface(p_renderer, healthSurface); */
+/* 	healthTextDest.x = BACKGROUND_ORIGIN_WIDTH - 200; */
+/* 	healthTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300; */
+/* 	healthTextDest.w = healthSurface->w; */
+/* 	healthTextDest.h = healthSurface->h; */
+/* 	SDL_RenderCopy(p_renderer, healthTexture, NULL, &healthTextDest); */
+/* 	SDL_FreeSurface(healthSurface); */
+/* 	SDL_DestroyTexture(healthTexture); */
 	
-	fontColor = { 255, 255, 255 };
-	sprintf(damageBuffer, "%d", damage);
-	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, damageBuffer, fontColor, 0);
-	SDL_Texture* damageTexture = SDL_CreateTextureFromSurface(p_renderer, damageSurface);
-	damageTextDest.x = 100;
-	damageTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300;
-	damageTextDest.w = damageSurface->w;
-	damageTextDest.h = damageSurface->h;
-	SDL_RenderCopy(p_renderer, damageTexture, NULL, &damageTextDest);
-	TTF_CloseFont(cardStatsFont);
-	SDL_FreeSurface(damageSurface);
-	/* SDL_DestroyTexture(damageTexture); */
+/* 	fontColor = { 255, 255, 255 }; */
+/* 	sprintf(damageBuffer, "%d", damage); */
+/* 	SDL_Surface* damageSurface = TTF_RenderText_Blended_Wrapped(cardStatsFont, damageBuffer, fontColor, 0); */
+/* 	SDL_Texture* damageTexture = SDL_CreateTextureFromSurface(p_renderer, damageSurface); */
+/* 	damageTextDest.x = 100; */
+/* 	damageTextDest.y = BACKGROUND_ORIGIN_HEIGHT - 300; */
+/* 	damageTextDest.w = damageSurface->w; */
+/* 	damageTextDest.h = damageSurface->h; */
+/* 	SDL_RenderCopy(p_renderer, damageTexture, NULL, &damageTextDest); */
+/* 	TTF_CloseFont(cardStatsFont); */
+/* 	SDL_FreeSurface(damageSurface); */
+/* 	/1* SDL_DestroyTexture(damageTexture); *1/ */
 
-	TTF_Quit();
+/* 	TTF_Quit(); */
 
-	if(SDL_SetRenderTarget(p_renderer, NULL) < 0)
-		cout << "Changing render target to default failed: " << SDL_GetError() << endl;
+/* 	if(SDL_SetRenderTarget(p_renderer, NULL) < 0) */
+/* 		cout << "Changing render target to default failed: " << SDL_GetError() << endl; */
 
-}
+/* } */
 
 void OpponentCard::update(Mouse p_mouse)
 {
@@ -114,10 +114,10 @@ void OpponentCard::update(Mouse p_mouse)
 	isSelected = false;
 }
 
-void OpponentCard::render(SDL_Renderer* p_renderer)
-{
-	SDL_RenderCopy(p_renderer, targetTexture, NULL, &targetDest);
-}
+/* void OpponentCard::render(SDL_Renderer* p_renderer) */
+/* { */
+/* 	SDL_RenderCopy(p_renderer, targetTexture, NULL, &targetDest); */
+/* } */
 
 void OpponentCard::playCard(int p_numberOfCardsOnBoard, SDL_Renderer* p_renderer)
 {
@@ -131,10 +131,10 @@ bool OpponentCard::getHasBeenPlayed()
 	return hasBeenPlayed;
 }
 
-short OpponentCard::damaged(SDL_Renderer* p_renderer, short p_damageTaken)
+short OpponentCard::damaged(short p_damageTaken)
 {
 	health -= p_damageTaken;
-	drawDynamicStats(p_renderer);
+	/* drawDynamicStats(p_renderer); */
 	return health;
 }
 
@@ -177,4 +177,9 @@ void OpponentCard::setTarget(int targetID)
 int OpponentCard::getTarget()
 {
 	return attackTarget;
+}
+
+short OpponentCard::getHealth()
+{
+	return health;
 }

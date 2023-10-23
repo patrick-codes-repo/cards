@@ -84,7 +84,7 @@ int playGame()
 	bool playerAttacking = false;
 
 	/* Opponent* opponent;//;(renderer, 50); */
-	opponent = new Opponent(renderer, 50);
+	opponent = new Opponent(50);
 
 	SDL_Event event;
 
@@ -126,6 +126,12 @@ int playGame()
 			{
 				playerSkipped = false;
 				opponentSkipped = false;
+				
+				for(OpponentCard& c : opponent->cardsOnBoard)
+				{
+					window.drawOpponentCardDynamicStats(c);
+				}
+
 				drawPlayerHealth();
 			}
 			else
@@ -249,9 +255,16 @@ int playGame()
 		/* SDL_RenderCopy(renderer, playerManaTexture, NULL, &manaTextDest); */
 		/* SDL_RenderCopy(renderer, roundNumberTexture, NULL, &roundNumberDest); */
 
-		opponent->renderHealth();
-		opponent->renderCards();
-		opponent->renderMana();
+		window.renderStat(opponent->opponentHealthTexture, opponent->healthTextDest);
+		window.renderStat(opponent->manaTexture, opponent->manaTextDest);
+		
+		for(OpponentCard& c : opponent->cardsOnBoard)
+		{
+			window.renderOpponentCard(c);
+		}
+		/* opponent->renderHealth(); */
+		/* opponent->renderCards(); */
+		/* opponent->renderMana(); */
 
 		window.renderButton(mainMenuButton);
 		window.renderButton(testFunctionButton);
@@ -263,7 +276,7 @@ int playGame()
 		/* scrollDeckup.draw(renderer); */
 		/* scrollDeckDown.draw(renderer); */
 		/* skip.draw(renderer); */
-		
+
 		renderCardsOnBoard(cardsOnBoard, selectedIndex);
 		renderPlayerHand(deck[handDisplayController], handFillers[handDisplayController], selectedIndex);
 		renderSelectedCard(selectedIndex, cardsOnBoard, deck[handDisplayController]);
@@ -333,7 +346,7 @@ void dealDamage(Card &selectedCard, vector<Card> &cardsOnBoard)
 	else 
 	{
 		selectedCard.damaged(opponent->getCardDamage(selectedCardTarget));
-		window.drawCardsDynamicStats(selectedCard);
+		window.drawCardDynamicStats(selectedCard);
 		opponent->damageCard(selectedCardTarget, selectedCard.getDamage());
 
 		if(opponent->getCardDied())

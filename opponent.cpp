@@ -4,8 +4,8 @@
 
 using namespace std;
 
-Opponent::Opponent(SDL_Renderer* p_renderer, short p_health)
-	:health(p_health), renderer(p_renderer)
+Opponent::Opponent(short p_health)
+	:health(p_health)
 {	
 	drawMana();
 	drawHealth();
@@ -13,15 +13,15 @@ Opponent::Opponent(SDL_Renderer* p_renderer, short p_health)
 	TTF_Quit();
 }
 
-void Opponent::renderHealth()
-{
-	SDL_RenderCopy(renderer, opponentHealthTexture, NULL, &healthTextDest);
-}
+/* void Opponent::renderHealth() */
+/* { */
+/* 	SDL_RenderCopy(renderer, opponentHealthTexture, NULL, &healthTextDest); */
+/* } */
 
-void Opponent::renderMana()
-{
-	SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest);
-}
+/* void Opponent::renderMana() */
+/* { */
+/* 	SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest); */
+/* } */
 
 void Opponent::damaged(short damageTaken)
 {
@@ -43,13 +43,13 @@ void Opponent::updateCards(Mouse p_mouse)
 		}
 }
 
-void Opponent::renderCards()
-{
-		for(OpponentCard& c : cardsOnBoard)
-		{
-			c.render(renderer);
-		}
-}
+/* void Opponent::renderCards() */
+/* { */
+/* 		for(OpponentCard& c : cardsOnBoard) */
+/* 		{ */
+/* 			c.render(renderer); */
+/* 		} */
+/* } */
 
 bool Opponent::makeMove(vector<Card> &playerCards, short &playerHealth)
 {
@@ -92,8 +92,8 @@ void Opponent::attack(vector<Card> &playerCards, short &playerHealth)
 	{
 		if(c.getID() == cardsOnBoard.at(0).getTarget())
 		{
-			c.damaged(renderer, cardsOnBoard.at(0).getDamage());
-			cardsRemainingHealth = cardsOnBoard.at(0).damaged(renderer, c.getDamage());
+			c.damaged(cardsOnBoard.at(0).getDamage());
+			cardsRemainingHealth = cardsOnBoard.at(0).damaged(c.getDamage());
 			targetFound = true;
 			break;
 		}
