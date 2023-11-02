@@ -259,6 +259,49 @@ void RenderWindow::renderDummyCard(DummyCard &dummyCard)
 	SDL_RenderCopy(renderer, dummyCard.targetTexture, NULL, &dummyCard.targetDest);
 }
 
+void RenderWindow::initializeOpponentCardTextures(OpponentCard &opponentCard)
+{
+	opponentCard.targetTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
+	opponentCard.noNumbers = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
+	
+	if(opponentCard.targetTexture == NULL)
+		cout << "render target not created: " << SDL_GetError() << endl;
+
+	if(SDL_SetRenderTarget(renderer, opponentCard.noNumbers) < 0)
+		cout << "Changing render target to noNumbers failed: " << SDL_GetError() << endl;
+
+	SDL_Texture* cardBackground = IMG_LoadTexture(renderer, "resources/card.jpg");
+	SDL_Rect backgroundSource;
+	backgroundSource.x = 0;
+	backgroundSource.y = 0;
+	backgroundSource.w = BACKGROUND_ORIGIN_WIDTH;
+	backgroundSource.h = BACKGROUND_ORIGIN_HEIGHT;
+	SDL_RenderCopy(renderer, cardBackground, &backgroundSource, NULL);
+	SDL_DestroyTexture(cardBackground);
+
+	if(TTF_Init() < 0)
+		cout << "tff_init error: " << SDL_GetError() << endl;
+
+	SDL_Color fontColor = { 255, 255, 255 };
+
+	TTF_Font* cardDescriptionFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
+	SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, "Welcome to\nGigi Labs", fontColor, 0);
+	SDL_Texture* cardDescriptionTexture = SDL_CreateTextureFromSurface(renderer, cardDescriptionSurface);
+	SDL_Rect descriptionTextDest;
+	descriptionTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - cardDescriptionSurface->w/2;
+	descriptionTextDest.y = BACKGROUND_ORIGIN_HEIGHT/2;
+	descriptionTextDest.w = cardDescriptionSurface->w;
+	descriptionTextDest.h = cardDescriptionSurface->h;
+	SDL_RenderCopy(renderer, cardDescriptionTexture, NULL, &descriptionTextDest);
+	TTF_CloseFont(cardDescriptionFont);
+	SDL_FreeSurface(cardDescriptionSurface);
+	SDL_DestroyTexture(cardDescriptionTexture);
+
+	TTF_Quit();
+
+	drawOpponentCardDynamicStats(opponentCard);
+}
+
 void RenderWindow::drawOpponentCardDynamicStats(OpponentCard &card)
 {
 	if(SDL_SetRenderTarget(renderer, card.targetTexture) < 0)
@@ -308,7 +351,6 @@ void RenderWindow::drawOpponentCardDynamicStats(OpponentCard &card)
 
 void RenderWindow::renderOpponentCard(OpponentCard &card)
 {
-
 	SDL_RenderCopy(renderer, card.targetTexture, NULL, &card.targetDest);
 }
 

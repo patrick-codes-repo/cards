@@ -15,7 +15,7 @@ class OpponentCard {
 		void update(Mouse p_mouse);
 		void moveCard(Mouse p_mouse);
 		int getCardY();
-		void playCard(int p_numberOfCardsOnBoard, SDL_Renderer* p_renderer);
+		void playCard(int p_numberOfCardsOnBoard);
 		bool getIsSelected();
 		bool getHasBeenPlayed();
 		short getCost();
@@ -39,7 +39,7 @@ class OpponentCard {
 		char healthBuffer[50];
 		char damageBuffer[50];
 		bool isSelected = false;
-		void createCardTexture(SDL_Renderer* p_renderer);
+		void createCardTexture();
 		bool hasBeenPlayed = false;
 		/* void drawDynamicStats(SDL_Renderer* p_renderer); */
 		int ID;

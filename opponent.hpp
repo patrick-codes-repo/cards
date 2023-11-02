@@ -11,7 +11,7 @@ class Opponent {
 		Opponent(short p_health);
 		void damaged(short damageTaken);
 		void healed();
-		bool makeMove(vector<Card> &playerCards, short &playerHealth);
+		void makeMove(vector<Card> &playerCards, short &playerHealth);
 		/* void renderHealth(); */
 		/* void renderMana(); */
 		/* void renderCards(); */
@@ -30,6 +30,8 @@ class Opponent {
 		SDL_Rect healthTextDest;
 		SDL_Rect manaTextDest;
 		vector<OpponentCard> cardsOnBoard;
+		opponentMove getLastMove();
+		OpponentCard& getCardToPlay();
 	private:
 		/* SDL_Renderer* renderer; */
 		short health;
@@ -49,4 +51,6 @@ class Opponent {
 		bool playCard();
 		bool attacking = false;
 		void attack(vector<Card> &playerCards, short &playerHealth);
+		opponentMove lastMove;
+		int cardToPlay;
 };

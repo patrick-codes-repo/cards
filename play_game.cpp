@@ -122,7 +122,12 @@ int playGame()
 
 		if(!playersTurn)
 		{
-			if(opponent->makeMove(cardsOnBoard, playerHealth))
+			opponent->makeMove(cardsOnBoard, playerHealth);
+			if(opponent->getLastMove() == playedCard)
+				window.initializeOpponentCardTextures(opponent->getCardToPlay());
+				//render the card texture
+
+			if(opponent->getLastMove() != skipped)
 			{
 				playerSkipped = false;
 				opponentSkipped = false;
@@ -134,7 +139,8 @@ int playGame()
 
 				drawPlayerHealth();
 			}
-			else
+
+			if(opponent->getLastMove() == skipped)
 				opponentSkipped = true;
 
 			endTurn();

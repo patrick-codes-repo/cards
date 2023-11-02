@@ -51,25 +51,34 @@ void Opponent::updateCards(Mouse p_mouse)
 /* 		} */
 /* } */
 
-bool Opponent::makeMove(vector<Card> &playerCards, short &playerHealth)
+void Opponent::makeMove(vector<Card> &playerCards, short &playerHealth)
 {
 	bool cardPlayed = playCard();
 
 	if(cardPlayed)
-		return true;
+	{
+		lastMove = playedCard;
+		return;
+	}
 
 	if(cardsOnBoard.size() == 0)
-		return false;
+	{
+		lastMove = skipped;
+		return;
+	}
 
 	if(attacking)
 	{
 		attacking = false;
-		return false;
+		lastMove = attacked;
+		return;
+		/* return false; */
 	}
 	
 	attack(playerCards, playerHealth);
 
-	return true;
+	/* return true; */
+	lastMove = attacked;
 }
 
 void Opponent::attack(vector<Card> &playerCards, short &playerHealth)
@@ -109,15 +118,20 @@ void Opponent::attack(vector<Card> &playerCards, short &playerHealth)
 
 bool Opponent::playCard()
 {
-	short cardToPlay = chooseCard();
+	cardToPlay = chooseCard();
 
 	if(cardToPlay < 0)
 		return false;
 
-	deck[cardToPlay].playCard(cardsOnBoard.size(), renderer);
+	/* if(cardToPlay >= 0) */
+	/* { */
+	deck[cardToPlay].playCard(cardsOnBoard.size());
 	cardsOnBoard.push_back(deck[cardToPlay]);
 	mana -= deck[cardToPlay].getCost();
 	drawMana();
+	/* } */
+
+	/* return cardToPlay; */
 	return true;
 }
 
@@ -209,7 +223,7 @@ void Opponent::damageCard(short &cardID, short p_damageTaken)
 	{
 		if(cardsOnBoard.at(i).getID() == cardID)
 		{
-			cardsRemainingHealth = cardsOnBoard.at(i).damaged(renderer, p_damageTaken);
+			cardsRemainingHealth = cardsOnBoard.at(i).damaged(p_damageTaken);
 			cardIndex = i;
 			break;
 		}
@@ -257,4 +271,14 @@ short Opponent::getCardDamage(short &cardID)
 			return cardsOnBoard.at(i).getDamage();
 		}
 	}
+}
+
+opponentMove Opponent::getLastMove()
+{
+	return lastMove;
+}
+
+OpponentCard& Opponent::getCardToPlay()
+{
+	return deck[cardToPlay];
 }

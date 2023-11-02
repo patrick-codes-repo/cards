@@ -28,6 +28,7 @@ class RenderWindow
 		void renderCard(Card &card);
 		void initializeDummyCardTextures(DummyCard &dummyCard);
 		void renderDummyCard(DummyCard &dummyCard);
+		void initializeOpponentCardTextures(OpponentCard &opponentCard);
 		void drawOpponentCardDynamicStats(OpponentCard &card);
 		void renderOpponentCard(OpponentCard &card);
 	private:

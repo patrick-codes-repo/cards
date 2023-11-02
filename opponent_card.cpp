@@ -9,52 +9,52 @@ OpponentCard::OpponentCard(short p_arrayPosition, short p_health, short p_damage
 {
 }
 
-void OpponentCard::createCardTexture(SDL_Renderer* p_renderer)
+void OpponentCard::createCardTexture()
 {
-	targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
-	noNumbers = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT);
+	/* targetTexture = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT); */
+	/* noNumbers = SDL_CreateTexture(p_renderer, SDL_PIXELFORMAT_UNKNOWN, SDL_TEXTUREACCESS_TARGET, BACKGROUND_ORIGIN_WIDTH, BACKGROUND_ORIGIN_HEIGHT); */
 
 	targetDest.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * boardPosition);
 	targetDest.y = (SCREEN_HEIGHT/3) - ADJUSTED_BACKGROUND_HEIGHT/2;
 	targetDest.w = ADJUSTED_BACKGROUND_WIDTH;
 	targetDest.h = ADJUSTED_BACKGROUND_HEIGHT;
 
-	if(targetTexture == NULL)
-		cout << "render target not created: " << SDL_GetError() << endl;
+	/* if(targetTexture == NULL) */
+	/* 	cout << "render target not created: " << SDL_GetError() << endl; */
 
-	if(SDL_SetRenderTarget(p_renderer, noNumbers) < 0)
-		cout << "Changing render target to noNumbers failed: " << SDL_GetError() << endl;
+	/* if(SDL_SetRenderTarget(p_renderer, noNumbers) < 0) */
+	/* 	cout << "Changing render target to noNumbers failed: " << SDL_GetError() << endl; */
 
-	SDL_Texture* cardBackground = IMG_LoadTexture(p_renderer, "resources/card.jpg");
-	SDL_Rect backgroundSource;
-	backgroundSource.x = 0;
-	backgroundSource.y = 0;
-	backgroundSource.w = BACKGROUND_ORIGIN_WIDTH;
-	backgroundSource.h = BACKGROUND_ORIGIN_HEIGHT;
-	SDL_RenderCopy(p_renderer, cardBackground, &backgroundSource, NULL);
-	SDL_DestroyTexture(cardBackground);
+	/* SDL_Texture* cardBackground = IMG_LoadTexture(p_renderer, "resources/card.jpg"); */
+	/* SDL_Rect backgroundSource; */
+	/* backgroundSource.x = 0; */
+	/* backgroundSource.y = 0; */
+	/* backgroundSource.w = BACKGROUND_ORIGIN_WIDTH; */
+	/* backgroundSource.h = BACKGROUND_ORIGIN_HEIGHT; */
+	/* SDL_RenderCopy(p_renderer, cardBackground, &backgroundSource, NULL); */
+	/* SDL_DestroyTexture(cardBackground); */
 
-	if(TTF_Init() < 0)
-		cout << "tff_init error: " << SDL_GetError() << endl;
+	/* if(TTF_Init() < 0) */
+	/* 	cout << "tff_init error: " << SDL_GetError() << endl; */
 
-	SDL_Color fontColor = { 255, 255, 255 };
+	/* SDL_Color fontColor = { 255, 255, 255 }; */
 
-	TTF_Font* cardDescriptionFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
-	SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, "Welcome to\nGigi Labs", fontColor, 0);
-	SDL_Texture* cardDescriptionTexture = SDL_CreateTextureFromSurface(p_renderer, cardDescriptionSurface);
-	SDL_Rect descriptionTextDest;
-	descriptionTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - cardDescriptionSurface->w/2;
-	descriptionTextDest.y = BACKGROUND_ORIGIN_HEIGHT/2;
-	descriptionTextDest.w = cardDescriptionSurface->w;
-	descriptionTextDest.h = cardDescriptionSurface->h;
-	SDL_RenderCopy(p_renderer, cardDescriptionTexture, NULL, &descriptionTextDest);
-	TTF_CloseFont(cardDescriptionFont);
-	SDL_FreeSurface(cardDescriptionSurface);
-	SDL_DestroyTexture(cardDescriptionTexture);
+	/* TTF_Font* cardDescriptionFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100); */
+	/* SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, "Welcome to\nGigi Labs", fontColor, 0); */
+	/* SDL_Texture* cardDescriptionTexture = SDL_CreateTextureFromSurface(p_renderer, cardDescriptionSurface); */
+	/* SDL_Rect descriptionTextDest; */
+	/* descriptionTextDest.x = BACKGROUND_ORIGIN_WIDTH/2 - cardDescriptionSurface->w/2; */
+	/* descriptionTextDest.y = BACKGROUND_ORIGIN_HEIGHT/2; */
+	/* descriptionTextDest.w = cardDescriptionSurface->w; */
+	/* descriptionTextDest.h = cardDescriptionSurface->h; */
+	/* SDL_RenderCopy(p_renderer, cardDescriptionTexture, NULL, &descriptionTextDest); */
+	/* TTF_CloseFont(cardDescriptionFont); */
+	/* SDL_FreeSurface(cardDescriptionSurface); */
+	/* SDL_DestroyTexture(cardDescriptionTexture); */
 
-	TTF_Quit();
+	/* TTF_Quit(); */
 
-	drawDynamicStats(p_renderer);
+	/* drawDynamicStats(p_renderer); */
 }
 
 /* void OpponentCard::drawDynamicStats(SDL_Renderer* p_renderer) */
@@ -119,10 +119,10 @@ void OpponentCard::update(Mouse p_mouse)
 /* 	SDL_RenderCopy(p_renderer, targetTexture, NULL, &targetDest); */
 /* } */
 
-void OpponentCard::playCard(int p_numberOfCardsOnBoard, SDL_Renderer* p_renderer)
+void OpponentCard::playCard(int p_numberOfCardsOnBoard)
 {
 	boardPosition = p_numberOfCardsOnBoard;
-	createCardTexture(p_renderer);
+	createCardTexture();
 	hasBeenPlayed = true;
 }
 
