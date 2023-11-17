@@ -159,15 +159,15 @@ void Opponent::drawHealth()
 	SDL_Color fontColor = { 255, 0, 0 };
 	TTF_Font* opponentHealthFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
 	sprintf(healthBuffer, "%d", health);
-	SDL_Surface* opponentHealthSurface = TTF_RenderText_Blended_Wrapped(opponentHealthFont, healthBuffer, fontColor, 0);
-	opponentHealthTexture = SDL_CreateTextureFromSurface(renderer, opponentHealthSurface);
+	opponentHealthSurface = TTF_RenderText_Blended_Wrapped(opponentHealthFont, healthBuffer, fontColor, 0);
+	/* opponentHealthTexture = SDL_CreateTextureFromSurface(renderer, opponentHealthSurface); */
 	healthTextDest.x = SCREEN_WIDTH/3 - opponentHealthSurface->w/2;
 	healthTextDest.y = SCREEN_HEIGHT/5 - opponentHealthSurface->h/2;
 	healthTextDest.w = opponentHealthSurface->w;
 	healthTextDest.h = opponentHealthSurface->h;
-	SDL_RenderCopy(renderer, opponentHealthTexture, NULL, &healthTextDest);
+	/* SDL_RenderCopy(renderer, opponentHealthTexture, NULL, &healthTextDest); */
 	TTF_CloseFont(opponentHealthFont);
-	SDL_FreeSurface(opponentHealthSurface);
+	/* SDL_FreeSurface(opponentHealthSurface); */
 
 	TTF_Quit();
 }
@@ -180,15 +180,15 @@ void Opponent::drawMana()
 	SDL_Color fontColor = { 0, 0, 255 };
 	TTF_Font* manaFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
 	sprintf(manaBuffer, "%d", mana);
-	SDL_Surface* manaSurface = TTF_RenderText_Blended_Wrapped(manaFont, manaBuffer, fontColor, 0);
-	manaTexture = SDL_CreateTextureFromSurface(renderer, manaSurface);
+	manaSurface = TTF_RenderText_Blended_Wrapped(manaFont, manaBuffer, fontColor, 0);
+	/* manaTexture = SDL_CreateTextureFromSurface(renderer, manaSurface); */
 	manaTextDest.x = (2*SCREEN_WIDTH/3) - manaSurface->w/2;
 	manaTextDest.y = SCREEN_HEIGHT/5 - manaSurface->h/2;
 	manaTextDest.w = manaSurface->w;
 	manaTextDest.h = manaSurface->h;
-	SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest);
+	/* SDL_RenderCopy(renderer, manaTexture, NULL, &manaTextDest); */
 	TTF_CloseFont(manaFont);
-	SDL_FreeSurface(manaSurface);
+	/* SDL_FreeSurface(manaSurface); */
 
 	TTF_Quit();
 }

@@ -36,8 +36,8 @@ int playGame()
 	Button scrollDeckDown(window.loadTexture("resources/buttons.png"), 50, 115, 1500, 950);
 	Button skip(window.loadTexture("resources/buttons.png"), 50, 115, 1800, SCREEN_HEIGHT/2);
 
-	SDL_Texture* background_image = window.loadTexture("resources/game_background.png");
-	SDL_Texture* card_image = window.loadTexture("resources/card.png");
+	SDL_Texture* backgroundImage = window.loadTexture("resources/game_background.png");
+	/* SDL_Texture* card_image = window.loadTexture("resources/card.png"); */
 
 	Card deck[][4] = {
 		{Card(0, 0, 1, 0, 10100), Card(0, 1, 0, 0, 10200), Card(0, 2, 2, 2, 10300), Card(0, 3, 0, 0, 10400)},
@@ -45,7 +45,7 @@ int playGame()
 		{Card(2, 0, 2, 3, 10900), Card(2, 1, 2, 2, 11000), Card(2, 2, 3, 2, 11100), Card(2, 3, 0, 0, 11200)} 
 	};
 
-	for(int i = 0; i < 3;)
+	for(int i = 0; i < 3; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
@@ -59,7 +59,7 @@ int playGame()
 		{DummyCard(0), DummyCard(1), DummyCard(2), DummyCard(3)}
 	};
 
-	for(int i = 0; i < 3;)
+	for(int i = 0; i < 3; i++)
 	{
 		for(int j = 0; j < 4; j++)
 		{
@@ -67,16 +67,15 @@ int playGame()
 		}
 	}
 
-
 	vector<Card> cardsOnBoard;
 
 	drawPlayerMana();
 	drawPlayerHealth();
 	drawRoundNumber();
 
-	TTF_Quit();
+	/* TTF_Quit(); */
 
-	vector<Entity> entity_array = {Entity(6200, 4500, 'b', background_image)};
+	/* vector<Entity> entity_array = {Entity(6200, 4500, 'b', background_image)}; */
 
 	bool cardOnside = false;
 	short cardOnSideIndex;
@@ -85,6 +84,8 @@ int playGame()
 
 	/* Opponent* opponent;//;(renderer, 50); */
 	opponent = new Opponent(50);
+	opponent->opponentHealthTexture = window.createTextureFromSurface(opponent->opponentHealthSurface);
+	opponent->manaTexture = window.createTextureFromSurface(opponent->manaSurface);
 
 	SDL_Event event;
 
@@ -249,10 +250,12 @@ int playGame()
 		
 		window.clear();
 		
-		for(Entity& e : entity_array)
-		{
-			window.render(e);
-		}
+		window.renderBackground(backgroundImage);
+
+		/* for(Entity& e : entity_array) */
+		/* { */
+		/* 	window.render(e); */
+		/* } */
 
 		window.renderStat(playerHealthTexture, healthTextDest);
 		window.renderStat(playerManaTexture, manaTextDest);
@@ -454,7 +457,6 @@ void renderPlayerHand(Card p_currentHandCards[], DummyCard p_currentHandFillers[
 {
 	for(int i = 0; i < 4; i++)
 	{
-		//Needs to call window.renderCard instead
 		if(i != p_selectedIndex)
 			(!p_currentHandFillers[i].getIsVisible()) ? window.renderCard(p_currentHandCards[i]) : window.renderDummyCard(p_currentHandFillers[i]);
 			/* (!p_currentHandFillers[i].getIsVisible()) ? p_currentHandCards[i].render(renderer) : p_currentHandFillers[i].render(renderer); */
@@ -535,7 +537,6 @@ void drawPlayerHealth()
 	if(TTF_Init() < 0)
 		cout << "tff_init error: " << SDL_GetError() << endl;
 
-	cout << "player h " << playerHealth << endl;
 	SDL_Color fontColor = {255, 0, 0};
 
 	TTF_Font* playerHealthFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
@@ -566,7 +567,7 @@ void drawPlayerMana()
 	sprintf(playerManaBuffer, "%d", playerMana);
 	SDL_Surface* playerManaSurface = TTF_RenderText_Blended_Wrapped(playerManaFont, playerManaBuffer, fontColor, 0);
 	/* playerManaTexture = SDL_CreateTextureFromSurface(renderer, playerManaSurface); */
-	playerHealthTexture = window.createTextureFromSurface(playerManaSurface);
+	playerManaTexture = window.createTextureFromSurface(playerManaSurface);
 	manaTextDest.x = (2*SCREEN_WIDTH)/5 - playerManaSurface->w/2;
 	manaTextDest.y = (4*SCREEN_HEIGHT)/5 - playerManaSurface->h/2;
 	manaTextDest.w = playerManaSurface->w;

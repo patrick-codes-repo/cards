@@ -32,6 +32,8 @@ class Opponent {
 		vector<OpponentCard> cardsOnBoard;
 		opponentMove getLastMove();
 		OpponentCard& getCardToPlay();
+		SDL_Surface* opponentHealthSurface; 
+		SDL_Surface* manaSurface;
 	private:
 		/* SDL_Renderer* renderer; */
 		short health;
