@@ -2,16 +2,14 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h> 
 
+#include "entity.hpp"
+
 class Mouse {
 	public:
 		Mouse(SDL_Texture* p_mouseTexture);
 		void update();
-		int getCollisionRectX();
-		int getCollisionRectY();
-		SDL_Texture* getTexture();
 		SDL_Rect collisionRect;
-		SDL_Rect imageRect;
+		Entity entity;
 	private:
-		SDL_Texture* mouseTexture;
 		void correctMousePosition();
 };

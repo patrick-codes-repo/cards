@@ -1,12 +1,12 @@
 #include <iostream>
 
-#include "render_window.hpp"
+#include "renderer.hpp"
 #include "entity.hpp"
 #include "globals.hpp"
 
 using namespace std;
 
-RenderWindow::RenderWindow(const char* p_title)
+Renderer::Renderer(const char* p_title)
 	:window(NULL), renderer(NULL)
 {
 	window = SDL_CreateWindow(p_title, SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_FULLSCREEN); // && SDL_WINDOW_BORDERLESS
@@ -18,7 +18,7 @@ RenderWindow::RenderWindow(const char* p_title)
 	SDL_RenderSetLogicalSize(renderer, 1920, 1080);
 }
 
-SDL_Texture* RenderWindow::loadTexture(const char* filePath)
+SDL_Texture* Renderer::loadTexture(const char* filePath)
 {
 	SDL_Texture * texture = IMG_LoadTexture(renderer, filePath);
 
@@ -28,7 +28,7 @@ SDL_Texture* RenderWindow::loadTexture(const char* filePath)
 	return texture;
 }
 
-SDL_Texture* RenderWindow::createTextureFromSurface(SDL_Surface* surface)
+SDL_Texture* Renderer::createTextureFromSurface(SDL_Surface* surface)
 {
 	SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
 
@@ -38,17 +38,31 @@ SDL_Texture* RenderWindow::createTextureFromSurface(SDL_Surface* surface)
 	return texture;
 }
 
-void RenderWindow::clear()
+void Renderer::clear()
 {
 	SDL_RenderClear(renderer);
 }
 
-void RenderWindow::render(Entity& p_entity)
+void Renderer::render(Entity& p_entity)
 {
 	SDL_RenderCopy(renderer, p_entity.texture, &p_entity.source, &p_entity.destination);
 }
 
-void RenderWindow::display()
+void Renderer::renderFullSource(Entity& p_entity)
+{
+	SDL_RenderCopy(renderer, p_entity.texture, NULL, &p_entity.destination);
+}
+
+void Renderer::renderBackground(SDL_Texture* p_backgroundImage)
+{
+	SDL_RenderCopy(renderer, p_backgroundImage, NULL, NULL);
+}
+void Renderer::display()
 {
 	SDL_RenderPresent(renderer);
+}
+
+void Renderer::cleanUp()
+{
+	SDL_DestroyWindow(window);
 }

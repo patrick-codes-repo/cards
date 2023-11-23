@@ -9,14 +9,16 @@
 #include "dummy_card.hpp"
 #include "opponent_card.hpp"
 
-class RenderWindow
+class Renderer
 {
 	public:
-		RenderWindow(const char* p_title);
+		Renderer(const char* p_title);
 		SDL_Texture* loadTexture(const char* filePath);
 		SDL_Texture* createTextureFromSurface(SDL_Surface* surface);
 		void clear();
 		void render(Entity& p_entity);
+		void renderFullSource(Entity& p_entity);
+		void renderBackground(SDL_Texture* p_backgroundImage);
 		void display();
 		void cleanUp();
 	private:
