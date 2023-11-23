@@ -3,9 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "play_game.hpp"
 #include "button.hpp"
-#include "mouse.hpp"
 #include "render_window.hpp"
 #include "globals.hpp"
 #include "entity.hpp"
@@ -36,7 +34,7 @@ int main()
 				gameLoopValue = mainMenu();
 				break;
 			case 2:
-				gameLoopValue = playGame();
+				//gameLoopValue = playGame();
 				break;
 			default:
 				return 0;
@@ -48,21 +46,17 @@ int mainMenu()
 {
 	RenderWindow window("Main Menu");
 
-	SDL_Texture* backgroundImage = window.loadTexture("resources/background.png");
-
-	Mouse mouse(window.loadTexture("resources/cursor.png"));
-
 	Button playButton(window.loadTexture("resources/buttons.png"), 50, 115, SCREEN_WIDTH/2 - 100, 500);
 	Button exitButton(window.loadTexture("resources/buttons.png"), 50, 115, SCREEN_WIDTH/2 - 100, 600);
+
+	vector<Entity> entity_array;
+	entity_array.push_back(playButton.entity);
+	entity_array.push_back(exitButton.entity);
 
 	SDL_Event event;
 
 	while(true)
 	{
-		mouse.update();
-		playButton.update(mouse);
-		exitButton.update(mouse);
-
 		while(SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -92,12 +86,11 @@ int mainMenu()
 		}
 		
 		window.clear();
-		
-		window.renderBackground(backgroundImage);
 
-		window.renderButton(playButton);
-		window.renderButton(exitButton);
-		window.renderMouse(mouse);
+		for(Entity& e : entity_array)
+		{
+			window.render(e);
+		}	
 
 		window.display();
 	}

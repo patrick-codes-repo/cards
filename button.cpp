@@ -1,38 +1,34 @@
 #include "button.hpp"
 
 Button::Button(SDL_Texture* p_buttonTexture, int p_sourceX, int p_sourceY, int p_destX, int p_destY)
-	:buttonTexture(p_buttonTexture)
 {
-	source.w = 155;
-	source.h = 55;
-	source.x = p_sourceX;
-	source.y = p_sourceY;
+	entity.source.w = 155;
+	entity.source.h = 55;
+	entity.source.x = p_sourceX;
+	entity.source.y = p_sourceY;
 
-	destination.w = 200;
-	destination.h = 75;
-	destination.x = p_destX;
-	destination.y = p_destY;
+	entity.destination.w = 200;
+	entity.destination.h = 75;
+	entity.destination.x = p_destX;
+	entity.destination.y = p_destY;
+
+	entity.texture = p_buttonTexture;
 }
 
 void Button::update(Mouse p_mouse)
 {
-	if(SDL_HasIntersection(&destination, &p_mouse.collisionRect))
+	if(SDL_HasIntersection(&entity.destination, &p_mouse.collisionRect))
 	{
 		isSelected = true;
-		source.y = 190;
+		entity.source.y = 190;
 		return;
 	}
 	
 	isSelected = false;
-	source.y = 115;
+	entity.source.y = 115;
 }
 
 bool Button::getIsSelected()
 {
 	return isSelected;
-}
-
-SDL_Texture* Button::getTexture()
-{
-	return buttonTexture;
 }

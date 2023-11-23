@@ -5,15 +5,11 @@
 class Entity
 {
 	public:
-		Entity(float p_x, float p_y, char p_type, SDL_Texture* p_texture);
-		float getX();
-		float getY();
-		SDL_Texture* getTexture();
-		SDL_Rect getCurrentFrame();
+	//	Entity(float p_x, float p_y, char p_type, SDL_Texture* p_texture);
+		Entity();
 		char getType();
-	private:
-		float x, y;
-		SDL_Rect currentFrame;
+		SDL_Texture* getTexture();
+		SDL_Rect source;
+		SDL_Rect destination;
 		SDL_Texture* texture;
-		char type;
 };
