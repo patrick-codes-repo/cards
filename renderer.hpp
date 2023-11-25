@@ -5,9 +5,6 @@
 #include "entity.hpp"
 #include "mouse.hpp"
 #include "button.hpp"
-#include "card.hpp"
-#include "dummy_card.hpp"
-#include "opponent_card.hpp"
 
 class Renderer
 {
