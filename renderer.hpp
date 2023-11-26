@@ -5,6 +5,7 @@
 #include "entity.hpp"
 #include "mouse.hpp"
 #include "button.hpp"
+#include "card_classes.cpp"
 
 class Renderer
 {
@@ -16,6 +17,8 @@ class Renderer
 		void render(Entity& p_entity);
 		void renderFullSource(Entity& p_entity);
 		void renderBackground(SDL_Texture* p_backgroundImage);
+		void drawCombatCard(CombatCard &card);
+		void drawCombatCardStats(CombatCard &card);
 		void display();
 		void cleanUp();
 	private:

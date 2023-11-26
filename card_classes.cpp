@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
@@ -18,6 +20,7 @@ class CardBase
 		virtual void update(Mouse &mouse) = 0;
 		virtual void resetCardPosition() = 0;
 		virtual void moveCard(Mouse &mouse) = 0;
+		virtual void drawDynamicStats() = 0;
 		Entity entity;
 	protected:
 		bool isSelected = false;
@@ -51,6 +54,11 @@ class DummyCard : public CardBase
 		{
 			return;
 		}
+
+		void drawDynamicStats()
+		{
+			return;
+		}
 	private:	
 		void resetCardPosition()
 		{
@@ -62,11 +70,14 @@ class CombatCard : public CardBase
 {
 	public:
 		void playCard();
+		SDL_Texture* noStats;
+		char* backgroundImagePath;
+		int health;
+		int damage;
+		int cost;
 	protected:		
 		std::string name;
 		int ID;
-		int health;
-		int damage;
 		State state = inHand;
 		int position;
 };
@@ -74,9 +85,14 @@ class CombatCard : public CardBase
 class PlayerCard : public CombatCard
 {
 	public:
-		PlayerCard(int arrayPosition, SDL_Texture* cardTexture)
+		PlayerCard(int arrayPosition, char* p_backgroundImagePath)
 		{
-			entity.texture = cardTexture;
+			health = 3;
+			damage = 5;
+			cost = 1;
+
+			backgroundImagePath = p_backgroundImagePath;
+
 			entity.destination.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * arrayPosition);
 			entity.destination.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
 			entity.destination.w = ADJUSTED_BACKGROUND_WIDTH;
@@ -101,6 +117,11 @@ class PlayerCard : public CombatCard
 		{
 			entity.destination.x = mouse.collisionRect.x - entity.destination.w/2;
 			entity.destination.y = mouse.collisionRect.y - entity.destination.h/2;
+		}
+
+		void drawDynamicStats()
+		{
+			return;
 		}
 	protected:
 		void resetCardPosition()

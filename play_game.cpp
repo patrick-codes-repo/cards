@@ -22,7 +22,8 @@ int playGame()
 
 	DummyCard test1(0, window.loadTexture("resources/dummy_card.jpg"));
 	DummyCard test2(1, window.loadTexture("resources/dummy_card.jpg"));
-	PlayerCard test3(2, window.loadTexture("resources/card.jpg"));
+	PlayerCard test3(2, "resources/card.jpg");
+	window.drawCombatCard(test3);
 
 	CardBase* playerDeck[] = {&test1, &test2, &test3};
 
