@@ -8,6 +8,7 @@
 #include "button.hpp"
 #include "mouse.hpp"
 #include "card_classes.cpp" 
+#include "player_cards.cpp"
 
 #include "globals.hpp"
 

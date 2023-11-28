@@ -86,7 +86,7 @@ void Renderer::drawCombatCard(CombatCard &card)
 
 	TTF_Font* cardDescriptionFont = TTF_OpenFont("resources/AovelSansRounded-rdDL.ttf", 100);
 
-	SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, "This is a test\ndescription", fontColor, 0);
+	SDL_Surface* cardDescriptionSurface = TTF_RenderText_Blended_Wrapped(cardDescriptionFont, card.description, fontColor, 0);
 
 	SDL_Texture* cardDescriptionTexture = SDL_CreateTextureFromSurface(renderer, cardDescriptionSurface);
 

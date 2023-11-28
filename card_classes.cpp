@@ -71,7 +71,8 @@ class CombatCard : public CardBase
 	public:
 		void playCard();
 		SDL_Texture* noStats;
-		char* backgroundImagePath;
+		const char* backgroundImagePath;
+		const char* description;
 		int health;
 		int damage;
 		int cost;
@@ -85,14 +86,8 @@ class CombatCard : public CardBase
 class PlayerCard : public CombatCard
 {
 	public:
-		PlayerCard(int arrayPosition, char* p_backgroundImagePath)
+		PlayerCard(int arrayPosition)
 		{
-			health = 3;
-			damage = 5;
-			cost = 1;
-
-			backgroundImagePath = p_backgroundImagePath;
-
 			entity.destination.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * arrayPosition);
 			entity.destination.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
 			entity.destination.w = ADJUSTED_BACKGROUND_WIDTH;

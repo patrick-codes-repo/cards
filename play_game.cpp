@@ -20,12 +20,21 @@ int playGame()
 	drawPlayerHealth(player, window);
 	drawPlayerMana(player, window);
 
-	DummyCard test1(0, window.loadTexture("resources/dummy_card.jpg"));
-	DummyCard test2(1, window.loadTexture("resources/dummy_card.jpg"));
-	PlayerCard test3(2, "resources/card.jpg");
-	window.drawCombatCard(test3);
+	Squirt squirt(0);
+	window.drawCombatCard(squirt);
+	Bonerfart bonerfart(1);
+	window.drawCombatCard(bonerfart);
+	cout << "ere" << endl;
+	Brave brave(2);
+	window.drawCombatCard(brave);
+	DummyCard dummy1(3, window.loadTexture("resources/dummy_card.jpg"));
+	
+	/* Mutt mutt(0); */
+	/* Common common(1); */
+	/* DoubleTrouble(2); */
+	/* DummyCard dummy2(3, window.loadTexture("resources/dummy_card.jpg")); */
 
-	CardBase* playerDeck[] = {&test1, &test2, &test3};
+	CardBase* playerDeck[] = {&squirt, &bonerfart, &brave, &dummy1};
 
 	CardBase* movingCard = NULL;
 
@@ -50,7 +59,7 @@ int playGame()
 		scrollDeckDown.update(mouse);
 		skip.update(mouse);
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			playerDeck[i]->update(mouse);
 		}
@@ -110,7 +119,7 @@ int playGame()
 		window.renderFullSource(player.manaEntity);
 		window.renderFullSource(roundNumberEntity);
 
-		for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 4; i++)
 		{
 			window.renderFullSource(playerDeck[i]->entity);
 		}
