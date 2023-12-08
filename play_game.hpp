@@ -2,6 +2,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 
 #include "renderer.hpp"
 #include "entity.hpp"
@@ -22,3 +23,6 @@ void drawPlayerMana(Player &player, Renderer &window);
 void drawOpponentHealth(Player &opponent, Renderer &window);
 void drawOpponentMana(Player &opponent, Renderer &window);
 void drawRoundNumber(int &roundNumber, Entity &roundNumberEntity, Renderer &window);
+void incrementHandController(int &handController);
+void decrementHandController(int &handController);
+CardBase* createNewDummy(int position, Renderer &window);

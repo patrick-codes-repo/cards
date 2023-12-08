@@ -12,6 +12,8 @@
 class CardBase
 {
 	public:
+		int position;
+
 		bool getIsSelected()
 		{
 			return isSelected;
@@ -31,8 +33,10 @@ class DummyCard : public CardBase
 	public:
 		DummyCard(int arrayPosition, SDL_Texture* cardTexture)
 		{
+			position = arrayPosition;
+
 			entity.texture = cardTexture;
-			entity.destination.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * arrayPosition);
+			entity.destination.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * position);
 			entity.destination.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
 			entity.destination.w = ADJUSTED_BACKGROUND_WIDTH;
 			entity.destination.h = ADJUSTED_BACKGROUND_HEIGHT;
@@ -80,7 +84,6 @@ class CombatCard : public CardBase
 		std::string name;
 		int ID;
 		State state = inHand;
-		int position;
 };
 
 class PlayerCard : public CombatCard
@@ -88,12 +91,12 @@ class PlayerCard : public CombatCard
 	public:
 		PlayerCard(int arrayPosition)
 		{
+			position = arrayPosition;
+
 			entity.destination.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * arrayPosition);
 			entity.destination.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT/2;
 			entity.destination.w = ADJUSTED_BACKGROUND_WIDTH;
 			entity.destination.h = ADJUSTED_BACKGROUND_HEIGHT;
-
-			position = arrayPosition;
 		}
 
 		void update(Mouse &mouse)

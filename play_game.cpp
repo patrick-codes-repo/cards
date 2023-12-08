@@ -24,19 +24,28 @@ int playGame()
 	window.drawCombatCard(squirt);
 	Bonerfart bonerfart(1);
 	window.drawCombatCard(bonerfart);
-	cout << "ere" << endl;
 	Brave brave(2);
 	window.drawCombatCard(brave);
 	DummyCard dummy1(3, window.loadTexture("resources/dummy_card.jpg"));
 	
-	/* Mutt mutt(0); */
-	/* Common common(1); */
-	/* DoubleTrouble(2); */
-	/* DummyCard dummy2(3, window.loadTexture("resources/dummy_card.jpg")); */
+	Mutt mutt(0);
+	window.drawCombatCard(mutt);
+	Common common(1);
+	window.drawCombatCard(common);
+	DoubleTrouble doubleTrouble(2);
+	window.drawCombatCard(doubleTrouble);
+	DummyCard dummy2(3, window.loadTexture("resources/dummy_card.jpg"));
 
-	CardBase* playerDeck[] = {&squirt, &bonerfart, &brave, &dummy1};
+	CardBase* playerDeck[][4] = {
+		{&squirt, &bonerfart, &brave, &dummy1},
+		{&mutt, &common, &doubleTrouble, &dummy2}
+	};
+
+	/* vector<PlayerCard> playerBoard; */
 
 	CardBase* movingCard = NULL;
+
+	int handController = 0;
 
 	Player opponent;
 	opponent.health = 50;
@@ -61,7 +70,7 @@ int playGame()
 
 		for (int i = 0; i < 4; i++)
 		{
-			playerDeck[i]->update(mouse);
+			playerDeck[handController][i]->update(mouse);
 		}
 
 		if (!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON_LMASK))
@@ -84,12 +93,13 @@ int playGame()
 				case SDL_MOUSEBUTTONDOWN:
 					for(int i = 0; i < 3; i++)
 					{
-						if(playerDeck[i]->getIsSelected()) 
+						if(playerDeck[handController][i]->getIsSelected()) 
 						{
-							movingCard = playerDeck[i];
+							movingCard = playerDeck[handController][i];
 							break;
 						}
 					}
+					break;
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
 					{
@@ -99,7 +109,41 @@ int playGame()
 							window.cleanUp();
 							return 1;
 						}
+
+						if (scrollDeckup.getIsSelected())
+						{
+							decrementHandController(handController);
+						}
+
+						if (scrollDeckDown.getIsSelected())
+						{
+							incrementHandController(handController);
+						}
+
+						if(movingCard != NULL)
+						{
+							if(movingCard->entity.destination.y < 700)
+							{
+								playerDeck[handController][movingCard->position] = createNewDummy(movingCard->position, window);
+							}
+						}
 					}
+					break;
+				case SDL_MOUSEWHEEL:
+					if(mouse.collisionRect.y < 700 || mouse.collisionRect.x > 1400 || mouse.collisionRect.x < 520)
+						break;
+
+					if(event.wheel.y > 0)
+					{
+						incrementHandController(handController);
+						break;
+					}
+
+					if(event.wheel.y < 0)
+					{
+						decrementHandController(handController);
+					}
+					break;
 			}
 		}
 	
@@ -121,7 +165,7 @@ int playGame()
 
 		for (int i = 0; i < 4; i++)
 		{
-			window.renderFullSource(playerDeck[i]->entity);
+			window.renderFullSource(playerDeck[handController][i]->entity);
 		}
 
 		window.renderFullSource(mouse.entity);
@@ -244,4 +288,26 @@ void drawOpponentMana(Player &opponent, Renderer &window)
 	SDL_FreeSurface(opponentManaSurface);
 
 	TTF_Quit();
+}
+
+void incrementHandController(int &handController)
+{
+	handController++;
+
+	if(handController > 1)
+		handController = 0;
+}
+
+void decrementHandController(int &handController)
+{
+	handController--;
+
+	if(handController < 0)
+		handController = 1;
+}
+
+CardBase* createNewDummy(int position, Renderer &window)
+{
+	DummyCard* temp = new DummyCard(position, window.loadTexture("resources/dummy_card.jpg"));
+	return temp;
 }
