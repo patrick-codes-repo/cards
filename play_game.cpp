@@ -21,27 +21,36 @@ int playGame()
 	drawPlayerMana(player, window);
 
 	Squirt squirt(0);
-	window.drawCombatCard(squirt);
 	Bonerfart bonerfart(1);
-	window.drawCombatCard(bonerfart);
 	Brave brave(2);
-	window.drawCombatCard(brave);
-	DummyCard dummy1(3, window.loadTexture("resources/dummy_card.jpg"));
 	
 	Mutt mutt(0);
-	window.drawCombatCard(mutt);
 	Common common(1);
-	window.drawCombatCard(common);
 	DoubleTrouble doubleTrouble(2);
-	window.drawCombatCard(doubleTrouble);
-	DummyCard dummy2(3, window.loadTexture("resources/dummy_card.jpg"));
 
-	CardBase* playerDeck[][4] = {
-		{&squirt, &bonerfart, &brave, &dummy1},
-		{&mutt, &common, &doubleTrouble, &dummy2}
+	PlayerCard* allPlayerCards[][4] = {
+		{&squirt, &bonerfart, &brave, NULL},
+		{&mutt, &common, &doubleTrouble, NULL}
 	};
 
-	/* vector<PlayerCard> playerBoard; */
+	CardBase* playerDeck[2][4];
+
+	for(int i = 0; i < 2; i++)
+	{
+		for(int j = 0; j < 4; j++)
+		{
+			if(allPlayerCards[i][j] == NULL)
+			{
+				playerDeck[i][j] = createNewDummy(j, window);
+				continue;
+			}
+
+			playerDeck[i][j] = allPlayerCards[i][j];
+			window.drawCombatCard(*allPlayerCards[i][j]);
+		}
+	}
+
+	vector<PlayerCard*> playerBoard;
 
 	CardBase* movingCard = NULL;
 
@@ -72,6 +81,11 @@ int playGame()
 		{
 			playerDeck[handController][i]->update(mouse);
 		}
+		
+		for(PlayerCard* c : playerBoard)
+		{
+			c->update(mouse);
+		}
 
 		if (!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON_LMASK))
 		{
@@ -99,6 +113,14 @@ int playGame()
 							break;
 						}
 					}
+					for(PlayerCard* c : playerBoard)
+					{
+						if(c->getIsSelected())
+						{
+							movingCard = c;
+							break;
+						}
+					}
 					break;
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
@@ -122,9 +144,12 @@ int playGame()
 
 						if(movingCard != NULL)
 						{
-							if(movingCard->entity.destination.y < 700)
+							if(movingCard->entity.destination.y < 700 && movingCard->state == inHand)
 							{
+								playerBoard.push_back(allPlayerCards[handController][movingCard->position]);
 								playerDeck[handController][movingCard->position] = createNewDummy(movingCard->position, window);
+								playerBoard.back()->state = onBoard;
+								playerBoard.back()->position = playerBoard.size() - 1;
 							}
 						}
 					}
@@ -166,6 +191,11 @@ int playGame()
 		for (int i = 0; i < 4; i++)
 		{
 			window.renderFullSource(playerDeck[handController][i]->entity);
+		}
+
+		for(PlayerCard* c : playerBoard)
+		{
+			window.renderFullSource(c->entity);
 		}
 
 		window.renderFullSource(mouse.entity);

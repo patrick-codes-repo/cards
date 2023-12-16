@@ -13,6 +13,7 @@ class CardBase
 {
 	public:
 		int position;
+		State state = inHand;
 
 		bool getIsSelected()
 		{
@@ -83,7 +84,6 @@ class CombatCard : public CardBase
 	protected:		
 		std::string name;
 		int ID;
-		State state = inHand;
 };
 
 class PlayerCard : public CombatCard
@@ -101,13 +101,14 @@ class PlayerCard : public CombatCard
 
 		void update(Mouse &mouse)
 		{
-			if(SDL_HasIntersection(&entity.destination, &mouse.collisionRect))
+			isSelected = SDL_HasIntersection(&entity.destination, &mouse.collisionRect);
+
+			if(isSelected && (state == inHand))
 			{
-				isSelected = true;
 				entity.destination.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT; 
 				return;
-			}	
-			isSelected = false;
+			}
+
 			resetCardPosition();	
 		}	
 
@@ -134,7 +135,6 @@ class PlayerCard : public CombatCard
 			entity.destination.y = SCREEN_HEIGHT/2;
 			entity.destination.x = SCREEN_WIDTH/8 + position * SCREEN_WIDTH/8;
 		}
-
 };
 
 class OpponentCard
