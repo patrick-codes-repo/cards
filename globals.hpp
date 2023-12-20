@@ -13,3 +13,10 @@ struct Player
 	Entity healthEntity;
 	Entity manaEntity;
 };
+
+struct GameState
+{
+	int roundNumber;
+	Entity roundNumberEntity;
+	bool playersTurn;
+};

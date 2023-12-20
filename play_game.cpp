@@ -14,6 +14,11 @@ int playGame()
 
 	Mouse mouse(window.loadTexture("resources/cursor.png"));
 
+	GameState gameState;
+	gameState.playersTurn = true;
+	gameState.roundNumber = 1;
+	drawRoundNumber(gameState.roundNumber, gameState.roundNumberEntity, window);
+
 	Player player;
 	player.health = 30;
 	player.mana = 1;
@@ -61,10 +66,6 @@ int playGame()
 	opponent.mana = 1;
 	drawOpponentHealth(opponent, window);
 	drawOpponentMana(opponent, window);
-
-	int roundNumber = 0;
-	Entity roundNumberEntity;
-	drawRoundNumber(roundNumber, roundNumberEntity, window);
 
 	SDL_Event event;
 
@@ -125,19 +126,24 @@ int playGame()
 				case SDL_MOUSEBUTTONUP:
 					if(event.button.button == SDL_BUTTON_LEFT)
 					{
-						if (mainMenuButton.getIsSelected())
+						if(testFunctionButton.getIsSelected())
+						{
+							endRound(gameState, player, window);
+						}
+
+						if(mainMenuButton.getIsSelected())
 						{
 							cout << "main menu clicked" << endl;
 							window.cleanUp();
 							return 1;
 						}
 
-						if (scrollDeckup.getIsSelected())
+						if(scrollDeckup.getIsSelected())
 						{
 							decrementHandController(handController);
 						}
 
-						if (scrollDeckDown.getIsSelected())
+						if(scrollDeckDown.getIsSelected())
 						{
 							incrementHandController(handController);
 						}
@@ -186,7 +192,7 @@ int playGame()
 		window.renderFullSource(opponent.healthEntity);
 		window.renderFullSource(opponent.manaEntity);
 		window.renderFullSource(player.manaEntity);
-		window.renderFullSource(roundNumberEntity);
+		window.renderFullSource(gameState.roundNumberEntity);
 
 		for (int i = 0; i < 4; i++)
 		{
@@ -334,6 +340,17 @@ void decrementHandController(int &handController)
 
 	if(handController < 0)
 		handController = 1;
+}
+
+void endRound(GameState &gameState, Player &player, Renderer &window)
+{
+	gameState.roundNumber++;
+	drawRoundNumber(gameState.roundNumber, gameState.roundNumberEntity, window);
+
+	gameState.playersTurn = (gameState.roundNumber % 2 != 0);
+
+	player.mana = gameState.roundNumber;
+	drawPlayerMana(player, window);
 }
 
 CardBase* createNewDummy(int position, Renderer &window)
