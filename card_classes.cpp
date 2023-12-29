@@ -23,7 +23,6 @@ class CardBase
 		virtual void update(Mouse &mouse) = 0;
 		virtual void resetCardPosition() = 0;
 		virtual void moveCard(Mouse &mouse) = 0;
-		virtual void drawDynamicStats() = 0;
 		Entity entity;
 	protected:
 		bool isSelected = false;
@@ -60,10 +59,6 @@ class DummyCard : public CardBase
 			return;
 		}
 
-		void drawDynamicStats()
-		{
-			return;
-		}
 	private:	
 		void resetCardPosition()
 		{
@@ -84,6 +79,43 @@ class CombatCard : public CardBase
 	protected:		
 		std::string name;
 		int ID;
+};
+
+class OpponentCard : public CombatCard
+{
+	public:
+		OpponentCard(int arrayPosition)
+		{
+			position = arrayPosition;
+
+			entity.destination.x = (SCREEN_WIDTH/4) + ((SCREEN_WIDTH/8) * arrayPosition);
+			entity.destination.y = (SCREEN_HEIGHT/3) - ADJUSTED_BACKGROUND_HEIGHT/2;
+			entity.destination.w = ADJUSTED_BACKGROUND_WIDTH;
+			entity.destination.h = ADJUSTED_BACKGROUND_HEIGHT;
+		}
+
+		void update(Mouse &mouse)
+		{
+			isSelected = SDL_HasIntersection(&entity.destination, &mouse.collisionRect);
+
+			if(isSelected && (state == onBoard))
+			{
+				//Show card information
+				return;
+			}
+
+		}	
+
+		void moveCard(Mouse &mouse)
+		{
+			return;
+		}
+
+	protected:
+		void resetCardPosition()
+		{
+			return;
+		}
 };
 
 class PlayerCard : public CombatCard
@@ -118,10 +150,8 @@ class PlayerCard : public CombatCard
 			entity.destination.y = mouse.collisionRect.y - entity.destination.h/2;
 		}
 
-		void drawDynamicStats()
-		{
-			return;
-		}
+		OpponentCard* target;
+
 	protected:
 		void resetCardPosition()
 		{
@@ -135,9 +165,4 @@ class PlayerCard : public CombatCard
 			entity.destination.y = SCREEN_HEIGHT/2;
 			entity.destination.x = SCREEN_WIDTH/8 + position * SCREEN_WIDTH/8;
 		}
-};
-
-class OpponentCard
-{
-
 };

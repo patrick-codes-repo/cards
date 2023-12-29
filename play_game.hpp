@@ -10,6 +10,7 @@
 #include "mouse.hpp"
 #include "card_classes.cpp" 
 #include "player_cards.cpp"
+#include "opponent_cards.cpp"
 
 #include "globals.hpp"
 
@@ -25,5 +26,8 @@ void drawOpponentMana(Player &opponent, Renderer &window);
 void drawRoundNumber(int &roundNumber, Entity &roundNumberEntity, Renderer &window);
 void incrementHandController(int &handController);
 void decrementHandController(int &handController);
-void endRound(GameState &gameState, Player &player, Renderer &window);
+void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window);
+void endTurn(bool &playersTurn);
 CardBase* createNewDummy(int position, Renderer &window);
+OpponentCard* createOpponentCard(int position);
+void damageOpponent(PlayerCard* attacker, OpponentCard* target, Player &opponent);

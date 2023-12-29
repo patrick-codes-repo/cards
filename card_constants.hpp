@@ -10,7 +10,7 @@ const int PLAYER_FACE = 100;
 const int OPPONENT_FACE = 200;
 const int NO_TARGET = 0;
 
-enum State {inHand, onBoard, onSide, inAttackingGroup, playingAttackAnimation, readyToDealDamage, attackedThisTurn};
+enum State {inHand, onBoard, onSide, inAttackingGroup, playingAttackAnimation, attackedThisTurn, dead};
 /* //can reuse existing enum and only use the needed values */
 /* enum opponentCardStates {onBoard, inAttackingGroup, attackedThisTurn}; */
 enum type {unit, special, spell};

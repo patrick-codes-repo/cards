@@ -57,6 +57,8 @@ int playGame()
 
 	vector<PlayerCard*> playerBoard;
 
+	vector<OpponentCard*> opponentBoard;
+
 	CardBase* movingCard = NULL;
 
 	int handController = 0;
@@ -98,6 +100,18 @@ int playGame()
 		if(movingCard != NULL)
 			movingCard->moveCard(mouse);
 
+		if(!gameState.playersTurn)
+		{
+			opponentBoard.push_back(createOpponentCard(opponentBoard.size()));
+			endTurn(gameState.playersTurn);
+			window.drawCombatCard(*opponentBoard.back());
+		}
+		
+		for(OpponentCard* c : opponentBoard)
+		{
+			c->update(mouse);
+		}
+
 		while(SDL_PollEvent(&event))
 		{
 			switch (event.type)
@@ -128,7 +142,12 @@ int playGame()
 					{
 						if(testFunctionButton.getIsSelected())
 						{
-							endRound(gameState, player, window);
+							endRound(gameState, player, opponent, window);
+						}
+						
+						if(skip.getIsSelected())
+						{
+							endTurn(gameState.playersTurn);
 						}
 
 						if(mainMenuButton.getIsSelected())
@@ -150,6 +169,41 @@ int playGame()
 
 						if(movingCard != NULL)
 						{
+							if(movingCard->entity.destination.y < 400 && movingCard->state == onBoard)
+							{
+								playerBoard[movingCard->position]->target = NULL;
+
+								for(OpponentCard* c : opponentBoard)
+								{
+									if(c->getIsSelected())
+									{
+										playerBoard[movingCard->position]->target = c;
+										break;
+									}
+								}
+
+								if(playerBoard[movingCard->position]->target == NULL)
+								{
+									cout << movingCard->position << " is attacking player face" << endl;	
+								} else
+									cout << movingCard->position << " is attacking " << playerBoard[movingCard->position]->target << endl;	
+
+								damageOpponent(playerBoard[movingCard->position], playerBoard[movingCard->position]->target, opponent);
+
+								for(PlayerCard* c : playerBoard)
+								{
+									window.drawCombatCard(*c);
+								}
+
+								for(OpponentCard* c : opponentBoard)
+								{
+									window.drawCombatCard(*c);
+								}
+
+								drawPlayerHealth(player, window);
+								drawOpponentHealth(opponent, window);
+							}
+
 							if(movingCard->entity.destination.y < 700 && movingCard->state == inHand)
 							{
 								playerBoard.push_back(allPlayerCards[handController][movingCard->position]);
@@ -204,12 +258,21 @@ int playGame()
 			window.renderFullSource(c->entity);
 		}
 
+		for(OpponentCard* c : opponentBoard)
+		{
+			window.renderFullSource(c->entity);
+		}
+
+		if(movingCard != NULL)
+		{
+			window.renderFullSource(movingCard->entity);
+		}
+
 		window.renderFullSource(mouse.entity);
 
 		window.display();
 	}
 }
-
 
 void drawRoundNumber(int &roundNumber, Entity &roundNumberEntity, Renderer &window)
 {
@@ -342,7 +405,7 @@ void decrementHandController(int &handController)
 		handController = 1;
 }
 
-void endRound(GameState &gameState, Player &player, Renderer &window)
+void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window)
 {
 	gameState.roundNumber++;
 	drawRoundNumber(gameState.roundNumber, gameState.roundNumberEntity, window);
@@ -351,10 +414,36 @@ void endRound(GameState &gameState, Player &player, Renderer &window)
 
 	player.mana = gameState.roundNumber;
 	drawPlayerMana(player, window);
+
+	opponent.mana = gameState.roundNumber;
+	drawOpponentMana(opponent, window);
+}
+
+void endTurn(bool &playersTurn)
+{
+	playersTurn = !playersTurn;
 }
 
 CardBase* createNewDummy(int position, Renderer &window)
 {
 	DummyCard* temp = new DummyCard(position, window.loadTexture("resources/dummy_card.jpg"));
 	return temp;
+}
+
+OpponentCard* createOpponentCard(int position)
+{
+	OCard1* temp = new OCard1(position); 
+	return temp;
+}
+
+void damageOpponent(PlayerCard* attacker, OpponentCard* target, Player &opponent)
+{
+	if(target == NULL)
+	{
+		opponent.health -= attacker->damage;
+		return;
+	}
+
+	target->health -= attacker->damage;
+	attacker->health -= target->damage;
 }
