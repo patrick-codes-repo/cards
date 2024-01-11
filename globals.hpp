@@ -14,9 +14,12 @@ struct Player
 	Entity manaEntity;
 };
 
+enum Status {playersTurn, opponentsTurn, playerStartedAttack, playerAttacking};
+
 struct GameState
 {
 	int roundNumber;
 	Entity roundNumberEntity;
 	bool playersTurn;
+	Status status;
 };

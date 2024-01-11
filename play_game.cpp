@@ -17,6 +17,7 @@ int playGame()
 	GameState gameState;
 	gameState.playersTurn = true;
 	gameState.roundNumber = 1;
+	gameState.status = playersTurn;
 	drawRoundNumber(gameState.roundNumber, gameState.roundNumberEntity, window);
 
 	Player player;
@@ -56,6 +57,7 @@ int playGame()
 	}
 
 	vector<PlayerCard*> playerBoard;
+	vector<PlayerCard*> playersAttackingCards;
 
 	vector<OpponentCard*> opponentBoard;
 
@@ -103,13 +105,36 @@ int playGame()
 		if(!gameState.playersTurn)
 		{
 			opponentBoard.push_back(createOpponentCard(opponentBoard.size()));
-			endTurn(gameState.playersTurn);
+			endTurn(gameState);
 			window.drawCombatCard(*opponentBoard.back());
 		}
 		
 		for(OpponentCard* c : opponentBoard)
 		{
 			c->update(mouse);
+		}
+
+		if(gameState.status == playerAttacking)
+		{
+			if(playersAttackingCards.at(0)->state == playingAnimation)
+			{
+				cout << playersAttackingCards.at(0)->position << " is playing animation" << endl;
+				playersAttackingCards.at(0)->state = attackedThisTurn;
+			}
+
+			if(playersAttackingCards.at(0)->state == attackedThisTurn)
+			{
+				damageOpponent(playersAttackingCards.at(0), playersAttackingCards.at(0)->target, opponent);
+				drawAfterDamage(playerBoard, opponentBoard, player, opponent, window);
+				cout << playersAttackingCards.at(0)->position << " has attacked" << endl;
+
+				playersAttackingCards.erase(playersAttackingCards.begin());
+
+				if(playersAttackingCards.size() > 0)
+					playersAttackingCards.at(0)->state = playingAnimation;
+				else
+					endTurn(gameState);
+			}
 		}
 
 		while(SDL_PollEvent(&event))
@@ -147,7 +172,13 @@ int playGame()
 						
 						if(skip.getIsSelected())
 						{
-							endTurn(gameState.playersTurn);
+							if(gameState.status == playerStartedAttack)
+							{
+								playersAttackingCards.at(0)->state = playingAnimation;
+								gameState.status = playerAttacking;
+							}
+							else
+								endTurn(gameState);
 						}
 
 						if(mainMenuButton.getIsSelected())
@@ -188,20 +219,10 @@ int playGame()
 								} else
 									cout << movingCard->position << " is attacking " << playerBoard[movingCard->position]->target << endl;	
 
-								damageOpponent(playerBoard[movingCard->position], playerBoard[movingCard->position]->target, opponent);
+								playersAttackingCards.push_back(playerBoard[movingCard->position]);
+								playersAttackingCards.back()->state = inAttackingGroup;
 
-								for(PlayerCard* c : playerBoard)
-								{
-									window.drawCombatCard(*c);
-								}
-
-								for(OpponentCard* c : opponentBoard)
-								{
-									window.drawCombatCard(*c);
-								}
-
-								drawPlayerHealth(player, window);
-								drawOpponentHealth(opponent, window);
+								gameState.status = playerStartedAttack;
 							}
 
 							if(movingCard->entity.destination.y < 700 && movingCard->state == inHand)
@@ -419,9 +440,17 @@ void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &
 	drawOpponentMana(opponent, window);
 }
 
-void endTurn(bool &playersTurn)
+void endTurn(GameState &gameState)
 {
-	playersTurn = !playersTurn;
+	gameState.playersTurn = !gameState.playersTurn;
+
+	if(gameState.playersTurn)
+	{
+		gameState.status = playersTurn;
+		return;
+	}
+
+	gameState.status = opponentsTurn;
 }
 
 CardBase* createNewDummy(int position, Renderer &window)
@@ -446,4 +475,20 @@ void damageOpponent(PlayerCard* attacker, OpponentCard* target, Player &opponent
 
 	target->health -= attacker->damage;
 	attacker->health -= target->damage;
+}
+
+void drawAfterDamage(vector<PlayerCard*> playerBoard, vector<OpponentCard*> opponentBoard, Player &player, Player &opponent, Renderer &window)
+{
+	for(PlayerCard* c : playerBoard)
+	{
+		window.drawCombatCard(*c);
+	}
+
+	for(OpponentCard* c : opponentBoard)
+	{
+		window.drawCombatCard(*c);
+	}
+
+	drawPlayerHealth(player, window);
+	drawOpponentHealth(opponent, window);
 }
