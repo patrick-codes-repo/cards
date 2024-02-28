@@ -30,13 +30,14 @@ int playGame()
 	Squirt squirt(0);
 	Bonerfart bonerfart(1);
 	Brave brave(2);
+    TestSpell testSpell(3);
 	
 	Mutt mutt(0);
 	Common common(1);
 	DoubleTrouble doubleTrouble(2);
 
 	PlayerCard* allPlayerCards[][4] = {
-		{&squirt, &bonerfart, &brave, NULL},
+		{&squirt, &bonerfart, &brave, &testSpell},
 		{&mutt, &common, &doubleTrouble, NULL}
 	};
 
@@ -63,6 +64,8 @@ int playGame()
 	vector<OpponentCard*> opponentBoard;
 
 	CardBase* movingCard = NULL;
+
+    int cardOnSideIndex = -1;
 
 	int handController = 0;
 
@@ -140,7 +143,7 @@ int playGame()
 					window.cleanUp();
 					return 0;
 				case SDL_MOUSEBUTTONDOWN:
-					for(int i = 0; i < 3; i++)
+					for(int i = 0; i < 4; i++)
 					{
 						if(playerDeck[handController][i]->getIsSelected()) 
 						{
@@ -169,7 +172,7 @@ int playGame()
 						{
 							if(gameState.status == playerStartedAttack)
 							{
-                playersAttackingCards.at(0)->playAttackAnimation();
+                                playersAttackingCards.at(0)->playAttackAnimation();
 								gameState.status = playerAttacking;
 							}
 							else
@@ -182,6 +185,27 @@ int playGame()
 							window.cleanUp();
 							return 1;
 						}
+
+                        if(cardOnSideIndex != -1)
+                        {
+                            for(PlayerCard* c : playerBoard)
+					        {
+						        if(c->getIsSelected())
+						        {
+                                    cout << "Spell targeting card at position " << c->position << endl;
+                                    playerDeck[handController][cardOnSideIndex]->state = dead;
+								    playerDeck[handController][cardOnSideIndex] = createNewDummy(cardOnSideIndex, window);
+							        break;
+						        }
+					        }
+                            
+                            if(playerDeck[handController][cardOnSideIndex]->state != dead)
+                            {
+                                playerDeck[handController][cardOnSideIndex]->state = inHand;
+                            }
+                            
+                            cardOnSideIndex = -1;
+                        }
 
 						if(scrollDeckup.getIsSelected())
 						{
@@ -222,10 +246,16 @@ int playGame()
 
 							if(movingCard->entity.destination.y < 700 && movingCard->state == inHand)
 							{
-								playerBoard.push_back(allPlayerCards[handController][movingCard->position]);
-								playerDeck[handController][movingCard->position] = createNewDummy(movingCard->position, window);
-								playerBoard.back()->state = onBoard;
-								playerBoard.back()->position = playerBoard.size() - 1;
+                                if(movingCard->type == spell)
+                                {
+                                    cardOnSideIndex = movingCard->position;
+                                    movingCard->state = onSide;
+                                } else {
+								    playerBoard.push_back(allPlayerCards[handController][movingCard->position]);
+								    playerDeck[handController][movingCard->position] = createNewDummy(movingCard->position, window);
+								    playerBoard.back()->state = onBoard;
+								    playerBoard.back()->position = playerBoard.size() - 1;
+                                }
 							}
 						}
 					}

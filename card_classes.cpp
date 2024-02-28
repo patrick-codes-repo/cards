@@ -28,6 +28,7 @@ class CardBase
 		virtual void resetCardPosition() = 0;
 		virtual void moveCard(Mouse &mouse) = 0;
 		Entity entity;
+        Type type;
 	protected:
 		bool isSelected = false;
 };
@@ -152,15 +153,22 @@ class PlayerCard : public CombatCard
 				return;
 			}
 
-      if(state == playingAnimation)
-      {
-        if(SDL_GetTicks() < animationEnd)
-        {
-          entity.destination.y = SCREEN_HEIGHT/2 - 50;
-          return;
-        }
-        state = attackedThisTurn;
-      }
+            if(state == onSide)
+            {
+                entity.destination.y = SCREEN_HEIGHT/2 - ADJUSTED_BACKGROUND_HEIGHT/2;
+                entity.destination.x = 20;
+                return;
+            }
+
+            if(state == playingAnimation)
+            {
+                if(SDL_GetTicks() < animationEnd)
+                {
+                    entity.destination.y = SCREEN_HEIGHT/2 - 50;
+                    return;
+                }
+                state = attackedThisTurn;
+            }
 
 			resetCardPosition();	
 		}	
