@@ -1,4 +1,5 @@
 #include "play_game.hpp"
+#include "card_constants.hpp"
 
 int playGame()
 {
@@ -116,12 +117,6 @@ int playGame()
 
 		if(gameState.status == playerAttacking)
 		{
-			if(playersAttackingCards.at(0)->state == playingAnimation)
-			{
-				cout << playersAttackingCards.at(0)->position << " is playing animation" << endl;
-				playersAttackingCards.at(0)->state = attackedThisTurn;
-			}
-
 			if(playersAttackingCards.at(0)->state == attackedThisTurn)
 			{
 				damageOpponent(playersAttackingCards.at(0), playersAttackingCards.at(0)->target, opponent);
@@ -131,7 +126,7 @@ int playGame()
 				playersAttackingCards.erase(playersAttackingCards.begin());
 
 				if(playersAttackingCards.size() > 0)
-					playersAttackingCards.at(0)->state = playingAnimation;
+          playersAttackingCards.at(0)->playAttackAnimation();
 				else
 					endTurn(gameState);
 			}
@@ -167,14 +162,14 @@ int playGame()
 					{
 						if(testFunctionButton.getIsSelected())
 						{
-							endRound(gameState, player, opponent, window);
+							endRound(gameState, player, opponent, window, playerBoard);
 						}
 						
 						if(skip.getIsSelected())
 						{
 							if(gameState.status == playerStartedAttack)
 							{
-								playersAttackingCards.at(0)->state = playingAnimation;
+                playersAttackingCards.at(0)->playAttackAnimation();
 								gameState.status = playerAttacking;
 							}
 							else
@@ -426,7 +421,7 @@ void decrementHandController(int &handController)
 		handController = 1;
 }
 
-void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window)
+void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window, vector<PlayerCard*> playerBoard)
 {
 	gameState.roundNumber++;
 	drawRoundNumber(gameState.roundNumber, gameState.roundNumberEntity, window);
@@ -438,6 +433,12 @@ void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &
 
 	opponent.mana = gameState.roundNumber;
 	drawOpponentMana(opponent, window);
+
+  //set all playere cards to not attacked
+	for(PlayerCard* c : playerBoard)
+	{
+    c->state = onBoard;
+	}
 }
 
 void endTurn(GameState &gameState)

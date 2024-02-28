@@ -26,7 +26,7 @@ void drawOpponentMana(Player &opponent, Renderer &window);
 void drawRoundNumber(int &roundNumber, Entity &roundNumberEntity, Renderer &window);
 void incrementHandController(int &handController);
 void decrementHandController(int &handController);
-void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window);
+void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window, vector<PlayerCard*> playerBoard);
 void endTurn(GameState &gameState);
 CardBase* createNewDummy(int position, Renderer &window);
 OpponentCard* createOpponentCard(int position);

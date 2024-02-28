@@ -2,12 +2,16 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_timer.h>
 #include <SDL2/SDL_ttf.h>
 #include <string>
+#include <iostream>
 
 #include "mouse.hpp"
 #include "card_constants.hpp"
 #include "globals.hpp"
+
+using namespace std;
 
 class CardBase
 {
@@ -70,6 +74,12 @@ class CombatCard : public CardBase
 {
 	public:
 		void playCard();
+    void playAttackAnimation()
+    {
+      state = playingAnimation;
+      animationEnd = SDL_GetTicks() + 750;
+      cout << "Player card " << position << " is playing animation" << endl;
+    }
 		SDL_Texture* noStats;
 		const char* backgroundImagePath;
 		const char* description;
@@ -79,6 +89,7 @@ class CombatCard : public CardBase
 	protected:		
 		std::string name;
 		int ID;
+    Uint32 animationEnd;
 };
 
 class OpponentCard : public CombatCard
@@ -140,6 +151,16 @@ class PlayerCard : public CombatCard
 				entity.destination.y = SCREEN_HEIGHT - ADJUSTED_BACKGROUND_HEIGHT; 
 				return;
 			}
+
+      if(state == playingAnimation)
+      {
+        if(SDL_GetTicks() < animationEnd)
+        {
+          entity.destination.y = SCREEN_HEIGHT/2 - 50;
+          return;
+        }
+        state = attackedThisTurn;
+      }
 
 			resetCardPosition();	
 		}	
