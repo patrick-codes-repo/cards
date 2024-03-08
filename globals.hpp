@@ -15,6 +15,7 @@ struct Player
 };
 
 enum Status {playersTurn, opponentsTurn, playerStartedAttack, playerAttacking};
+enum Action {playCard, attack, skipTurn, undecided};
 
 struct GameState
 {

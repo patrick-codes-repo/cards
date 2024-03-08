@@ -24,6 +24,7 @@ void drawPlayerMana(Player &player, Renderer &window);
 void drawOpponentHealth(Player &opponent, Renderer &window);
 void drawOpponentMana(Player &opponent, Renderer &window);
 void drawRoundNumber(int &roundNumber, Entity &roundNumberEntity, Renderer &window);
+CombatCard* findSelectedCard(vector<PlayerCard*> playerBoard, vector<OpponentCard*> opponentBoard);
 void incrementHandController(int &handController);
 void decrementHandController(int &handController);
 void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &window, vector<PlayerCard*> playerBoard);

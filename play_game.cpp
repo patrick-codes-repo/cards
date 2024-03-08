@@ -1,5 +1,8 @@
 #include "play_game.hpp"
+#include "card_classes.cpp"
 #include "card_constants.hpp"
+#include "opponent_actions.hpp"
+#include <vector>
 
 int playGame()
 {
@@ -63,6 +66,7 @@ int playGame()
 
 	vector<OpponentCard*> opponentBoard;
 
+    CombatCard* selectedCard = NULL;
 	CardBase* movingCard = NULL;
 
     int cardOnSideIndex = -1;
@@ -95,6 +99,8 @@ int playGame()
 		{
 			c->update(mouse);
 		}
+        
+        selectedCard = findSelectedCard(playerBoard, opponentBoard);
 
 		if (!(SDL_GetMouseState(NULL, NULL)&SDL_BUTTON_LMASK))
 		{
@@ -108,9 +114,18 @@ int playGame()
 
 		if(!gameState.playersTurn)
 		{
-			opponentBoard.push_back(createOpponentCard(opponentBoard.size()));
-			endTurn(gameState);
-			window.drawCombatCard(*opponentBoard.back());
+            if(makeMove(opponentBoard) == skipTurn)
+            {
+                //store this somewhere
+                //Probably will add lastAction part to Player struct to store each playes last action 
+                //Will need a check to see if both players skipped
+                //If so end round and set players' last actions to undecided
+            }
+            else{
+			    opponentBoard.push_back(createOpponentCard(opponentBoard.size()));
+			    endTurn(gameState);
+			    window.drawCombatCard(*opponentBoard.back());
+            }
 		}
 		
 		for(OpponentCard* c : opponentBoard)
@@ -188,17 +203,13 @@ int playGame()
 
                         if(cardOnSideIndex != -1)
                         {
-                            for(PlayerCard* c : playerBoard)
-					        {
-						        if(c->getIsSelected())
-						        {
-                                    cout << "Spell targeting card at position " << c->position << endl;
+                            if(selectedCard != NULL)
+                            {
+                                    cout << "Spell targeting card at position " << selectedCard->position << endl;
                                     playerDeck[handController][cardOnSideIndex]->state = dead;
 								    playerDeck[handController][cardOnSideIndex] = createNewDummy(cardOnSideIndex, window);
-							        break;
-						        }
-					        }
-                            
+                            }
+
                             if(playerDeck[handController][cardOnSideIndex]->state != dead)
                             {
                                 playerDeck[handController][cardOnSideIndex]->state = inHand;
@@ -435,6 +446,27 @@ void drawOpponentMana(Player &opponent, Renderer &window)
 	TTF_Quit();
 }
 
+CombatCard* findSelectedCard(vector<PlayerCard*> playerBoard, vector<OpponentCard*> opponentBoard)
+{
+    for (PlayerCard* c : playerBoard)
+    {
+        if(c->getIsSelected())
+        {
+            return c;
+        }
+    }
+
+    for (OpponentCard* c : opponentBoard)
+    {
+        if(c->getIsSelected())
+        {
+            return c;
+        }
+    }
+
+    return NULL;
+}
+
 void incrementHandController(int &handController)
 {
 	handController++;
@@ -464,10 +496,9 @@ void endRound(GameState &gameState, Player &player, Player &opponent, Renderer &
 	opponent.mana = gameState.roundNumber;
 	drawOpponentMana(opponent, window);
 
-  //set all playere cards to not attacked
 	for(PlayerCard* c : playerBoard)
 	{
-    c->state = onBoard;
+        c->state = onBoard;
 	}
 }
 
